@@ -35,3 +35,7 @@ management:
       exposure:
         exclude: env,beans
         include: "*"
+      base-path: '/system/actuator'
+  endpoint:
+    health:
+      show-details: always
