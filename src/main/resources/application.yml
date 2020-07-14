@@ -39,3 +39,31 @@ management:
   endpoint:
     health:
       show-details: always
+
+---
+# spring, datasource
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rare-rds.ct12sp1kygt2.ap-northeast-2.rds.amazonaws.com/rare?characterEncoding=UTF-8
+    username: rare
+    password: rare
+  flyway:
+    url: jdbc:mysql://rare-rds.ct12sp1kygt2.ap-northeast-2.rds.amazonaws.com/rare?characterEncoding=UTF-8
+    user: rare
+    password: rare
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    web: debug
+    com.codesquad.rare: debug
