@@ -1,6 +1,6 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
+name: 이슈 템플릿
+about: 이슈 생성을 더 쉽게 도와줍니다
 title: ''
 labels: ''
 assignees: ''
@@ -11,6 +11,7 @@ assignees: ''
 이슈를 작성한 이유는 자유롭게 작성한다.
 
 #### 테스트 통과 여부
-테스트 케이스가 필요없는 기능일 경우 삭제해주세요.
+필요없는 항목일 경우 삭제해주세요.
  
 #### 기능 추가시, 필요하다고 생각되는 테스트 작성
+필요없는 항목일 경우 삭제해주세요.
