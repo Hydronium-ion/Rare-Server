@@ -1,23 +1,17 @@
-package com.codesquad.rare.domain;
+package com.codesquad.rare.domain.post;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedBy;
 
 @Getter
 @Builder
@@ -37,14 +31,13 @@ public class Post {
   //TODO content nullable, length 설정
   private String content;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @CreatedBy
-  private Account Author;
+  private String Author;
 
   private Integer views;
 
-  @OneToMany
-  private List<Like> likes = new ArrayList<>();
+  private Integer likes;
+
+  private String tags;
 
   @CreationTimestamp
   private LocalDateTime createAt;
