@@ -63,3 +63,15 @@ logging:
   level:
     web: debug
     com.codesquad.rare: debug
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: env,beans
+        include: "*"
+      base-path: '/system/actuator'
+  endpoint:
+    health:
+      show-details: always
