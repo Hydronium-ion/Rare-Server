@@ -1,0 +1,65 @@
+spring:
+  profiles:
+    active: local
+
+---
+# spring, datasource
+spring:
+  profiles: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rare
+    username: root
+    password: rare
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+    open-in-view: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+# logging
+logging:
+  level:
+    web: debug
+    com.codesquad.rare: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: env,beans
+        include: "*"
+      base-path: '/system/actuator'
+  endpoint:
+    health:
+      show-details: always
+
+---
+# spring, datasource
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rare-rds.ct12sp1kygt2.ap-northeast-2.rds.amazonaws.com/rare?characterEncoding=UTF-8
+    username: rare
+    password: rare
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    web: debug
+    com.codesquad.rare: debug
