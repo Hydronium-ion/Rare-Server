@@ -3,7 +3,7 @@
 #              CD-BE.yml
 on:
   push:
-    branches: [ dev ]
+    branches: [ master ]
 
 name: CD-BE
 env:
