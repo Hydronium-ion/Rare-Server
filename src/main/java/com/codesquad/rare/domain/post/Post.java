@@ -31,7 +31,9 @@ public class Post {
   //TODO content nullable, length 설정
   private String content;
 
-  private String Author;
+  private String thumbnail;
+
+  private String author;
 
   private Integer views;
 

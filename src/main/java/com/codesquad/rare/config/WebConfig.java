@@ -21,10 +21,8 @@ public class WebConfig {
     return builder -> {
       builder.simpleDateFormat(DATE_TIME_FORMAT);
       builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_FORMAT)));
-      builder
-          .serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-      builder
-          .serializers(new ZonedDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+      builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+      builder.serializers(new ZonedDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
       builder.timeZone(TimeZone.getTimeZone(TIME_ZONE));
     };
   }
