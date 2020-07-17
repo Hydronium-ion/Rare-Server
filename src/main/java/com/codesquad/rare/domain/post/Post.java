@@ -1,5 +1,6 @@
 package com.codesquad.rare.domain.post;
 
+import com.codesquad.rare.common.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Entity
-public class Post {
+public class Post extends BaseTimeEntity {
 
   @Id
   @Column(name = "post_id")
@@ -40,7 +41,4 @@ public class Post {
   private Integer likes;
 
   private String tags;
-
-  @CreationTimestamp
-  private LocalDateTime createAt;
 }
