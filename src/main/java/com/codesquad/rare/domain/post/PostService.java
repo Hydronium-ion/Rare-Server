@@ -17,4 +17,9 @@ public class PostService {
   public List<Post> findAll() {
     return postRepository.findAll();
   }
+
+  @Transactional
+  public Post save(Post post) {
+    return postRepository.save(post);
+  }
 }

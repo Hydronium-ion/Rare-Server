@@ -1,0 +1,11 @@
+= Rare API Docs
+
+== Post
+:snippets: ../../../build/generated-snippets
+
+include::{snippets}/post-controller-test/메인_페이지_조회/http-response.adoc[]
+include::{snippets}/post-controller-test/메인_페이지_조회/curl-request.adoc[]
+include::{snippets}/post-controller-test/메인_페이지_조회/http-request.adoc[]
+include::{snippets}/post-controller-test/메인_페이지_조회/httpie-request.adoc[]
+include::{snippets}/post-controller-test/메인_페이지_조회/request-body.adoc[]
+include::{snippets}/post-controller-test/메인_페이지_조회/response-body.adoc[]
