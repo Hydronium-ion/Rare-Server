@@ -1,6 +1,5 @@
 package com.codesquad.rare.domain.post;
 
-import com.codesquad.rare.common.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -13,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Builder
@@ -54,6 +53,6 @@ public class Post {
 
   private String tags;
 
-  @CreatedDate
+  @CreationTimestamp
   private LocalDateTime createdTimeAt;
 }

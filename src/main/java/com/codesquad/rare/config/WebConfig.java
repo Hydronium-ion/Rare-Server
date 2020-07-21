@@ -26,5 +26,4 @@ public class WebConfig {
       builder.timeZone(TimeZone.getTimeZone(TIME_ZONE));
     };
   }
-
 }
