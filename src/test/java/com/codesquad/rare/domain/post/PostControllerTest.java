@@ -86,7 +86,7 @@ class PostControllerTest {
     given(postService.findAll()).willReturn(posts);
 
     //when
-    ResultActions result = mockMvc.perform(get("/")
+    ResultActions result = mockMvc.perform(get("/posts")
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON));
 
@@ -97,31 +97,35 @@ class PostControllerTest {
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             responseFields(
-                fieldWithPath("[].id")
+                fieldWithPath("success").description("성공 여부")
+                    .type(JsonFieldType.BOOLEAN),
+                fieldWithPath("error").description("에러 여부(발생 시, 어떠한 에러인지 기재)")
+                    .type(JsonFieldType.NULL),
+                fieldWithPath("response.[].id")
                     .description("포스트 ID 번호(고유한 값)")
                     .type(JsonFieldType.NUMBER),
-                fieldWithPath("[].title")
+                fieldWithPath("response.[].title")
                     .description("포스트 제목")
                     .type(JsonFieldType.STRING),
-                fieldWithPath("[].content")
+                fieldWithPath("response.[].content")
                     .description("포스트 내용")
                     .type(JsonFieldType.STRING),
-                fieldWithPath("[].thumbnail")
+                fieldWithPath("response.[].thumbnail")
                     .description("포스트 썸네일")
                     .type(JsonFieldType.STRING),
-                fieldWithPath("[].author")
+                fieldWithPath("response.[].author")
                     .description("포스트 저자")
                     .type(JsonFieldType.STRING),
-                fieldWithPath("[].views")
+                fieldWithPath("response.[].views")
                     .description("포스트 조회")
                     .type(JsonFieldType.NUMBER),
-                fieldWithPath("[].likes")
+                fieldWithPath("response.[].likes")
                     .description("포스트 좋아요 수")
                     .type(JsonFieldType.NUMBER),
-                fieldWithPath("[].tags")
+                fieldWithPath("response.[].tags")
                     .description("포스트 태그")
                     .type(JsonFieldType.STRING),
-                fieldWithPath("[].createdTimeAt")
+                fieldWithPath("response.[].createdTimeAt")
                     .description("포스트 생성시간")
                     .type(JsonFieldType.STRING)
             )));
