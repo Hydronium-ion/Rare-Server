@@ -1,10 +1,13 @@
 package com.codesquad.rare.domain.post;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -20,6 +23,8 @@ public class PostDataRunner implements ApplicationRunner {
   public void run(ApplicationArguments args) throws Exception {
 
     Random random = new Random();
+    List<Post> postList = new ArrayList<>();
+
 
     for (int i = 1; i <= 10; i++) {
       Post post = Post.builder()
@@ -32,8 +37,14 @@ public class PostDataRunner implements ApplicationRunner {
           .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
           .build();
 
-      postRepository.save(post);
+      postList.add(post);
     }
+
+    save(postList);
     
+  }
+  @Transactional
+  public void save(List<Post> postList) {
+    postRepository.saveAll(postList);
   }
 }
