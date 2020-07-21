@@ -53,6 +53,6 @@ public class Post {
 
   private String tags;
 
-  @CreationTimestamp
+//  @CreationTimestamp
   private LocalDateTime createdTimeAt;
 }
