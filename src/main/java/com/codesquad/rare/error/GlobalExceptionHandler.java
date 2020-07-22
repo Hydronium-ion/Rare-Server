@@ -22,12 +22,6 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(ERROR(exception, status), headers, status);
   }
 
-  private ResponseEntity<ApiResult> newResponseWithString(String message, HttpStatus status) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json");
-    return new ResponseEntity<>(ERROR(message, status), headers, status);
-  }
-
   // 예상 하지 못했던 오류
   @ExceptionHandler({Exception.class, RuntimeException.class})
   public ResponseEntity<?> handleException(Exception e) {

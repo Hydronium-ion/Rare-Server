@@ -12,12 +12,12 @@ public class ApiError {
 
   private final int status;
 
-  public ApiError(Exception exception, HttpStatus status) {
-    this(exception.getMessage(), status);
-  }
-
-  public ApiError(String message, HttpStatus status) {
+  private ApiError(String message, HttpStatus status) {
     this.message = message;
     this.status = status.value();
+  }
+
+  public ApiError(Exception exception, HttpStatus status) {
+    this(exception.getMessage(), status);
   }
 }

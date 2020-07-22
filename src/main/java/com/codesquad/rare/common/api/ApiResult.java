@@ -27,8 +27,4 @@ public class ApiResult<T> {
   public static ApiResult ERROR(Exception exception, HttpStatus status) {
     return new ApiResult<>(false, null, new ApiError(exception, status));
   }
-
-  public static ApiResult ERROR(String errorMessage, HttpStatus status) {
-    return new ApiResult<>(false, null, new ApiError(errorMessage, status));
-  }
 }
