@@ -12,7 +12,7 @@ Hamil, Han
 
 == Post
 
-=== 메인 페이지 조회 (최신순으로 정렬)
+=== 메인 페이지 (최신순으로 정렬)
 
 ==== Request
 
@@ -25,3 +25,19 @@ include::{snippets}/post-controller-test/find_all_posts/http-response.adoc[]
 ==== Response Fields
 
 include::{snippets}/post-controller-test/find_all_posts/response-fields.adoc[]
+
+=== Post 조회
+
+==== Request
+
+include::{snippets}/post-controller-test/find_post_by_id/path-parameters.adoc[]
+include::{snippets}/post-controller-test/find_post_by_id/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/find_post_by_id/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/find_post_by_id/response-fields.adoc[]
+

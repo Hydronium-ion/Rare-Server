@@ -3,13 +3,13 @@ package com.codesquad.rare.domain.post;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,20 +27,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest(controllers = {PostController.class})
 class PostControllerTest {
-
-  @Autowired
-  private WebApplicationContext context;
 
   @Autowired
   MockMvc mockMvc;
@@ -52,18 +50,14 @@ class PostControllerTest {
   public void setUp(WebApplicationContext webApplicationContext,
       RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+        .addFilter((new CharacterEncodingFilter("UTF-8", true)))
         .apply(documentationConfiguration(restDocumentation)
             .operationPreprocessors()
-            .withResponseDefaults(prettyPrint())
-        )
+            .withResponseDefaults(prettyPrint()))
         .build();
   }
 
-  @DisplayName("메인 페이지 조회 ")
-  @Test
-  void find_all_posts() throws Exception {
-
-    //given
+  private List<Post> getPosts() {
     Random random = new Random();
 
     Post post1 = Post.builder()
@@ -90,7 +84,15 @@ class PostControllerTest {
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
-    List<Post> posts = Arrays.asList(post1, post2);
+    return Arrays.asList(post1, post2);
+  }
+
+  @DisplayName("메인 페이지 조회")
+  @Test
+  void find_all_posts() throws Exception {
+
+    //given
+    List<Post> posts = getPosts();
     given(postService.findAll()).willReturn(posts);
 
     //when
@@ -136,6 +138,68 @@ class PostControllerTest {
                     .description("포스트 태그")
                     .type(JsonFieldType.STRING),
                 fieldWithPath("response.[].createdTimeAt")
+                    .description("포스트 생성 시간")
+                    .type(JsonFieldType.STRING)
+            )));
+  }
+
+  @DisplayName("ID로 Post 조회")
+  @Test
+  void find_post_by_id() throws Exception {
+
+    //given
+    List<Post> posts = getPosts();
+    Long postId = posts.get(0).getId();
+    given(postService.findById(postId)).willReturn(posts.get(0));
+
+    //when
+    MockHttpServletRequestBuilder requestBuilder = get("/posts/{id}", postId.intValue())
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON);
+
+    //then
+    mockMvc.perform(requestBuilder)
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andDo(document("{class-name}/{method-name}",
+            pathParameters(
+                parameterWithName("id")
+                    .description("POST의 ID")
+            ),
+            responseFields(
+                fieldWithPath("success")
+                    .description("성공 여부")
+                    .type(JsonFieldType.BOOLEAN),
+                fieldWithPath("error")
+                    .description("에러 여부(발생 시, 어떠한 에러인지 기재)")
+                    .type(JsonFieldType.NULL),
+                subsectionWithPath("response")
+                    .description("응답"),
+                fieldWithPath("response.id")
+                    .description("포스트 ID 번호(고유한 값)")
+                    .type(JsonFieldType.NUMBER),
+                fieldWithPath("response.title")
+                    .description("포스트 제목")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.content")
+                    .description("포스트 내용")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.thumbnail")
+                    .description("포스트 썸네일")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.author")
+                    .description("포스트 저자")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.views")
+                    .description("포스트 조회")
+                    .type(JsonFieldType.NUMBER),
+                fieldWithPath("response.likes")
+                    .description("포스트 좋아요 수")
+                    .type(JsonFieldType.NUMBER),
+                fieldWithPath("response.tags")
+                    .description("포스트 태그")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.createdTimeAt")
                     .description("포스트 생성 시간")
                     .type(JsonFieldType.STRING)
             )));
