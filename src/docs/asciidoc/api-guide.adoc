@@ -1,0 +1,27 @@
+= Rare API Docs
+Hamil, Han
+:doctype: book
+:icons: font
+//:docinfo: shared-head
+//:sectlinks:
+:source-highlighter: highlightjs
+:snippets: ../../../build/generated-snippets
+:toc: left
+:toclevels: 3
+:sectnums:
+
+== Post
+
+=== 메인 페이지 조회 (최신순으로 정렬)
+
+==== Request
+
+include::{snippets}/post-controller-test/find_all_posts/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/find_all_posts/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/find_all_posts/response-fields.adoc[]
