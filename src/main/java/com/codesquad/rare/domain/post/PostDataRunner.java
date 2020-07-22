@@ -22,13 +22,11 @@ public class PostDataRunner implements ApplicationRunner {
   }
 
   @Override
-  public void run(ApplicationArguments args) throws Exception {
+  public void run(ApplicationArguments args) {
 
     Random random = new Random();
     LocalDateTime localDateTime = LocalDateTime.now();
-    long days = localDateTime.until(localDateTime, ChronoUnit.DAYS);
     List<Post> postList = new ArrayList<>();
-
 
     for (int i = 1; i <= 10; i++) {
       Post post = Post.builder()
@@ -44,7 +42,6 @@ public class PostDataRunner implements ApplicationRunner {
 
       postList.add(post);
     }
-
     save(postList);
     
   }
