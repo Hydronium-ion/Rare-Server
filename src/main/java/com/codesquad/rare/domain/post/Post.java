@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,10 +38,10 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  //TODO title not nullable length 설정
+  @Column(nullable = false, length = 100)
   private String title;
 
-  //TODO content nullable, length 설정
+  @Lob
   private String content;
 
   private String thumbnail;
