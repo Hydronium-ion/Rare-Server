@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class PostService {
 
   private final PostRepository postRepository;
@@ -14,12 +15,10 @@ public class PostService {
     this.postRepository = postRepository;
   }
 
-  @Transactional(readOnly = true)
   public List<Post> findAll() {
     return postRepository.findAllByOrderByCreatedTimeAtDesc();
   }
 
-  @Transactional(readOnly = true)
   public Post findById(Long postId) {
     return postRepository.findById(postId).orElseThrow(() -> new NotFoundException(Post.class, postId));
   }
