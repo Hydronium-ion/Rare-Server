@@ -8,6 +8,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,6 +40,9 @@ import org.springframework.web.context.WebApplicationContext;
 class PostControllerTest {
 
   @Autowired
+  private WebApplicationContext context;
+
+  @Autowired
   MockMvc mockMvc;
 
   @MockBean
@@ -47,13 +52,16 @@ class PostControllerTest {
   public void setUp(WebApplicationContext webApplicationContext,
       RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-        .apply(documentationConfiguration(restDocumentation))
+        .apply(documentationConfiguration(restDocumentation)
+            .operationPreprocessors()
+            .withResponseDefaults(prettyPrint())
+        )
         .build();
   }
 
-  @DisplayName("메인 페이지 조회")
+  @DisplayName("메인 페이지 조회 ")
   @Test
-  void 메인_페이지_조회() throws Exception {
+  void find_all_posts() throws Exception {
 
     //given
     Random random = new Random();
@@ -94,13 +102,15 @@ class PostControllerTest {
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("{class-name}/{method-name}",
-            preprocessRequest(prettyPrint()),
-            preprocessResponse(prettyPrint()),
             responseFields(
-                fieldWithPath("success").description("성공 여부")
+                fieldWithPath("success")
+                    .description("성공 여부")
                     .type(JsonFieldType.BOOLEAN),
-                fieldWithPath("error").description("에러 여부(발생 시, 어떠한 에러인지 기재)")
+                fieldWithPath("error")
+                    .description("에러 여부(발생 시, 어떠한 에러인지 기재)")
                     .type(JsonFieldType.NULL),
+                subsectionWithPath("response")
+                    .description("응답"),
                 fieldWithPath("response.[].id")
                     .description("포스트 ID 번호(고유한 값)")
                     .type(JsonFieldType.NUMBER),
@@ -126,7 +136,7 @@ class PostControllerTest {
                     .description("포스트 태그")
                     .type(JsonFieldType.STRING),
                 fieldWithPath("response.[].createdTimeAt")
-                    .description("포스트 생성시간")
+                    .description("포스트 생성 시간")
                     .type(JsonFieldType.STRING)
             )));
   }
