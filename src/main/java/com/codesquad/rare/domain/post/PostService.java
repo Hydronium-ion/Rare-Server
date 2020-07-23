@@ -33,7 +33,7 @@ public class PostService {
   }
 
   @Transactional
-  public void save(PostRequestDto postRequestDto) {
+  public Post save(PostRequestDto postRequestDto) {
     Post post = Post.builder()
         .id(postRequestDto.getId())
         .title(postRequestDto.getTitle())
@@ -46,7 +46,7 @@ public class PostService {
         .createdTimeAt(LocalDateTime.now())
         .build();
 
-    postRepository.save(post);
+    return postRepository.save(post);
   }
 
   @Transactional
