@@ -1,7 +1,9 @@
 package com.codesquad.rare.domain.post;
 
 import com.codesquad.rare.error.exeception.NotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +26,25 @@ public class PostService {
   }
 
   @Transactional
-  public Post save(Post post) {
-    return postRepository.save(post);
+  public void save(PostRequestDto postRequestDto) {
+    Post post = Post.builder()
+        .id(postRequestDto.getId())
+        .title(postRequestDto.getTitle())
+        .content(postRequestDto.getContent())
+        .thumbnail(postRequestDto.getThumbnail())
+        .author(postRequestDto.getAuthor())
+        .views(postRequestDto.getViews())
+        .likes(postRequestDto.getLikes())
+        .tags(postRequestDto.getTags())
+        .createdTimeAt(LocalDateTime.now())
+        .build();
+
+    postRepository.save(post);
+  }
+
+  @Transactional
+  public void delete(Long postId) {
+    Post post = postRepository.getOne(postId);
+    postRepository.delete(post);
   }
 }
