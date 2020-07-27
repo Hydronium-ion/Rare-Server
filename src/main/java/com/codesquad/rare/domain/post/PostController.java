@@ -47,5 +47,4 @@ public class PostController {
     postService.delete(postId);
     return OK("포스트 삭제 성공");
   }
-
 }

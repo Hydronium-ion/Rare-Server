@@ -3,10 +3,9 @@ package com.codesquad.rare.domain.post;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import org.assertj.core.api.Assertions;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -48,7 +47,6 @@ class PostServiceTest {
         .createdTimeAt(LocalDateTime.now())
         .build();
 
-    log.debug("post : {}", post.getId());
     //when
     Post result = postService.save(post);
 
@@ -56,13 +54,39 @@ class PostServiceTest {
     assertThat(result.getId()).isEqualTo(11L);
   }
 
+  @DisplayName("같은 포스트 반복 생성 테스트")
+  @RepeatedTest(value = 10, name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
+  void create_tenTimes_AllPass(RepetitionInfo repetitionInfo) throws Exception {
+    //given
+    Long createdDefaultPost = 10L; // 처음 생성 되는 글 10개
+
+    PostRequestDto post = PostRequestDto.builder()
+        .id(repetitionInfo.getCurrentRepetition() + createdDefaultPost)
+        .title("블로그 포스팅 테스트1")
+        .content("블로그에 글을 적는 건 즐거워")
+        .thumbnail("thumbnail 이미지")
+        .author("최한울")
+        .views(85)
+        .likes(3)
+        .tags("hamill")
+        .createdTimeAt(LocalDateTime.now())
+        .build();
+
+    //when
+    Post result = postService.save(post);
+
+    //then
+    assertThat(result.getId())
+        .isEqualTo(repetitionInfo.getCurrentRepetition() + createdDefaultPost);
+  }
+
   @DisplayName("포스트 삭제 테스트")
   @Test
-  public void delete() throws Exception {
+  void delete() throws Exception {
     //given
 
     //when
 
     //then
-   }
+  }
 }

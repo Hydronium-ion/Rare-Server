@@ -55,4 +55,18 @@ public class Post {
 
 //  @CreationTimestamp
   private LocalDateTime createdTimeAt;
+
+  public static Post from(PostRequestDto postRequestDto) {
+    return Post.builder()
+        .id(postRequestDto.getId())
+        .title(postRequestDto.getTitle())
+        .content(postRequestDto.getContent())
+        .thumbnail(postRequestDto.getThumbnail())
+        .author(postRequestDto.getAuthor())
+        .views(postRequestDto.getViews())
+        .likes(postRequestDto.getLikes())
+        .tags(postRequestDto.getTags())
+        .createdTimeAt(LocalDateTime.now())
+        .build();
+  }
 }
