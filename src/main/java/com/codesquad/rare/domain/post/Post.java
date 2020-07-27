@@ -59,7 +59,7 @@ public class Post {
 
   private String tags;
 
-  private LocalDateTime createdTimeAt;
+  private LocalDateTime createdAt;
 
   public static Post from(PostRequestDto postRequestDto) {
     return Post.builder()
@@ -71,7 +71,7 @@ public class Post {
         .views(postRequestDto.getViews())
         .likes(postRequestDto.getLikes())
         .tags(postRequestDto.getTags())
-        .createdTimeAt(LocalDateTime.now())
+        .createdAt(LocalDateTime.now())
         .build();
   }
 }
