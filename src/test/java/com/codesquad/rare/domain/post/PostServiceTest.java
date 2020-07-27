@@ -84,9 +84,26 @@ class PostServiceTest {
   @Test
   void delete() throws Exception {
     //given
+    Long postId = 1L;
 
     //when
+    Post result = postService.delete(postId);
 
     //then
+    assertThat(result.getId()).isEqualTo(postId);
+  }
+
+  @DisplayName("포스트 반복 삭제 테스트")
+  @RepeatedTest(value = 3,name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
+  void delete_third_OnePassTheOthersFailure() {
+    System.out.println("히히");
+    //given
+    Long postId = 1L;
+
+    //when
+    Post result = postService.delete(postId);
+
+    //then
+    assertThat(result.getId()).isEqualTo(postId);
   }
 }
