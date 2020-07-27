@@ -25,3 +25,18 @@ include::{snippets}/post-controller-test/find_all_posts/http-response.adoc[]
 ==== Response Fields
 
 include::{snippets}/post-controller-test/find_all_posts/response-fields.adoc[]
+
+=== 포스트 생성 API
+
+==== Request
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/response-fields.adoc[]
+
