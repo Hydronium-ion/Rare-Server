@@ -10,6 +10,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentRequest;
 import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -170,6 +171,7 @@ class PostControllerTest {
         .name("won")
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
+
     Random random = new Random();
     PostRequestDto postRequestDto = PostRequestDto.builder()
         .id(1L)
@@ -182,6 +184,7 @@ class PostControllerTest {
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
+    log.info("postRequestDto: {}", postRequestDto);
     Post post = Post.from(postRequestDto);
     given(postService.save(postRequestDto)).willReturn(post);
 
@@ -202,7 +205,10 @@ class PostControllerTest {
             fieldWithPath("title").description("포스트 제목").type(JsonFieldType.STRING),
             fieldWithPath("content").description("포스트 내용").type(JsonFieldType.STRING),
             fieldWithPath("thumbnail").description("포스트 썸네일 이미지").type(JsonFieldType.STRING),
-            fieldWithPath("author").description("포스트 작성자").type(JsonFieldType.STRING),
+            fieldWithPath("author").description("포스트 작성자").type(JsonFieldType.OBJECT),
+            fieldWithPath("author.id").description("포스트 작성자의 ID").type(JsonFieldType.NUMBER),
+            fieldWithPath("author.name").description("포스트 작성자의 이름").type(JsonFieldType.STRING),
+            fieldWithPath("author.avatarUrl").description("포스트 작성자의 아바타 URL").type(JsonFieldType.STRING),
             fieldWithPath("views").description("포스트 조회수").type(JsonFieldType.NUMBER),
             fieldWithPath("likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
             fieldWithPath("tags").description("포스트 태그").type(JsonFieldType.STRING)
