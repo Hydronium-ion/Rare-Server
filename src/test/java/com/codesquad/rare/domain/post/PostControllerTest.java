@@ -1,16 +1,11 @@
 package com.codesquad.rare.domain.post;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentRequest;
 import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -21,8 +16,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.codesquad.rare.domain.account.Account;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +38,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest(controllers = {PostController.class})
@@ -51,9 +45,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 class PostControllerTest {
 
   private final Logger log = LoggerFactory.getLogger(PostControllerTest.class);
-
-  @Autowired
-  private WebApplicationContext context;
 
   @Autowired
   MockMvc mockMvc;
@@ -159,7 +150,7 @@ class PostControllerTest {
             )));
   }
 
-  @DisplayName("포스트 생성 Spring Rest Docs")
+  @DisplayName("포스트 생성")
   @Test
   public void create_post_spring_rest_docs() throws Exception {
     //given
@@ -169,15 +160,12 @@ class PostControllerTest {
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
 
-    Random random = new Random();
     PostRequestDto postRequestDto = PostRequestDto.builder()
         .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
         .author(won)
-        .likes(random.nextInt(99))
         .tags("1번")
-        .views(random.nextInt(999))
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
@@ -195,8 +183,8 @@ class PostControllerTest {
 
     //then
     result.andDo(document("{class-name}/{method-name}",
-        preprocessRequest(prettyPrint()),
-        preprocessResponse(prettyPrint()),
+        getDocumentRequest(),
+        getDocumentResponse(),
         requestFields(
             fieldWithPath("id").description("포스트 ID 번호").type(JsonFieldType.NUMBER),
             fieldWithPath("title").description("포스트 제목").type(JsonFieldType.STRING),
@@ -206,8 +194,6 @@ class PostControllerTest {
             fieldWithPath("author.id").description("포스트 작성자의 ID").type(JsonFieldType.NUMBER),
             fieldWithPath("author.name").description("포스트 작성자의 이름").type(JsonFieldType.STRING),
             fieldWithPath("author.avatarUrl").description("포스트 작성자의 아바타 URL").type(JsonFieldType.STRING),
-            fieldWithPath("views").description("포스트 조회수").type(JsonFieldType.NUMBER),
-            fieldWithPath("likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
             fieldWithPath("tags").description("포스트 태그").type(JsonFieldType.STRING)
         ),
         responseFields(
@@ -218,7 +204,7 @@ class PostControllerTest {
     ));
    }
 
-  @DisplayName("포스트 삭제 Spring Rest Docs")
+  @DisplayName("포스트 삭제")
   @Test
   public void delete_post_spring_rest_docs() throws Exception {
     //given
@@ -227,21 +213,17 @@ class PostControllerTest {
         .name("won")
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
-    Random random = new Random();
+
     PostRequestDto postRequestDto = PostRequestDto.builder()
         .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
         .author(won)
-        .likes(random.nextInt(99))
         .tags("1번")
-        .views(random.nextInt(999))
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
     postService.save(postRequestDto);
-
-    String postId = "1";
 
     Post post = postService.findById(postRequestDto.getId());
     given(postService.delete(postRequestDto.getId())).willReturn(post);
@@ -254,8 +236,8 @@ class PostControllerTest {
 
     //then
     result.andDo(document("{class-name}/{method-name}",
-        preprocessRequest(prettyPrint()),
-        preprocessResponse(prettyPrint()),
+        getDocumentRequest(),
+        getDocumentResponse(),
         pathParameters(
             parameterWithName("id").description("삭제할 포스트의 ID")
         ),
