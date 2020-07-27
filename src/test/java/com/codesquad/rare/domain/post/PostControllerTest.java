@@ -1,10 +1,10 @@
 package com.codesquad.rare.domain.post;
 
+import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentRequest;
+import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.codesquad.rare.domain.account.Account;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -22,12 +23,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest(controllers = {PostController.class})
+@AutoConfigureRestDocs
 class PostControllerTest {
 
   @Autowired
@@ -48,16 +50,17 @@ class PostControllerTest {
   @MockBean
   PostService postService;
 
-  @BeforeEach
-  public void setUp(WebApplicationContext webApplicationContext,
-      RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-        .apply(documentationConfiguration(restDocumentation)
-            .operationPreprocessors()
-            .withResponseDefaults(prettyPrint())
-        )
-        .build();
-  }
+//  @BeforeEach
+//  public void setUp(WebApplicationContext webApplicationContext,
+//      RestDocumentationContextProvider restDocumentation) {
+//    this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+//        .apply(documentationConfiguration(restDocumentation)
+//            .operationPreprocessors()
+//            .withRequestDefaults(prettyPrint())
+//            .withResponseDefaults(prettyPrint())
+//        )
+//        .build();
+//  }
 
   @DisplayName("메인 페이지 조회 ")
   @Test
@@ -66,11 +69,17 @@ class PostControllerTest {
     //given
     Random random = new Random();
 
+    Account won = Account.builder()
+        .id(1L)
+        .name("won")
+        .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
+        .build();
+
     Post post1 = Post.builder()
         .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
-        .author("won")
+        .author(won)
         .likes(random.nextInt(99))
         .tags("1번")
         .views(random.nextInt(999))
@@ -82,7 +91,7 @@ class PostControllerTest {
         .id(2L)
         .title("2번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
-        .author("won")
+        .author(won)
         .likes(random.nextInt(99))
         .tags("2번")
         .views(random.nextInt(999))
@@ -102,6 +111,8 @@ class PostControllerTest {
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("{class-name}/{method-name}",
+            getDocumentRequest(),
+            getDocumentResponse(),
             responseFields(
                 fieldWithPath("success")
                     .description("성공 여부")
@@ -125,7 +136,7 @@ class PostControllerTest {
                     .type(JsonFieldType.STRING),
                 fieldWithPath("response.[].author")
                     .description("포스트 저자")
-                    .type(JsonFieldType.STRING),
+                    .type(JsonFieldType.OBJECT),
                 fieldWithPath("response.[].views")
                     .description("포스트 조회")
                     .type(JsonFieldType.NUMBER),
