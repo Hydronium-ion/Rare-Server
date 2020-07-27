@@ -31,7 +31,7 @@ import org.hibernate.annotations.CreationTimestamp;
     "views",
     "likes",
     "tags",
-    "createdTimeAt"
+    "createdAt"
 })
 @Entity
 public class Post {
@@ -59,6 +59,5 @@ public class Post {
 
   private String tags;
 
-//  @CreationTimestamp
-  private LocalDateTime createdTimeAt;
+  private LocalDateTime createdAt;
 }

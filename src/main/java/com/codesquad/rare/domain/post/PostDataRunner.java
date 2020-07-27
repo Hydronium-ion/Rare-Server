@@ -45,7 +45,7 @@ public class PostDataRunner implements ApplicationRunner {
           .tags(i + "번")
           .views(random.nextInt(999))
           .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
-          .createdTimeAt(localDateTime.plusDays(random.nextInt(10 - 5 + 1) + 5)) // 5~10사이의 일수를 더한다
+          .createdAt(localDateTime.plusDays(random.nextInt(10 - 5 + 1) + 5)) // 5~10사이의 일수를 더한다
           .build();
 
       postList.add(post);
