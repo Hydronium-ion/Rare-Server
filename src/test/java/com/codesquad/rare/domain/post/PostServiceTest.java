@@ -2,6 +2,7 @@ package com.codesquad.rare.domain.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.codesquad.rare.domain.account.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
@@ -34,12 +35,18 @@ class PostServiceTest {
   @Test
   public void create() throws Exception {
     //given
+    Account won = Account.builder()
+        .id(1L)
+        .name("won")
+        .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
+        .build();
+
     PostRequestDto post = PostRequestDto.builder()
         .id(11L)
         .title("블로그 포스팅 테스트1")
         .content("블로그에 글을 적는 건 즐거워")
         .thumbnail("thumbnail 이미지")
-        .author("최한울")
+        .author(won)
         .views(85)
         .likes(3)
         .tags("hamill")
@@ -59,12 +66,18 @@ class PostServiceTest {
     //given
     Long createdDefaultPost = 10L; // 처음 생성 되는 글 10개
 
+    Account won = Account.builder()
+        .id(1L)
+        .name("won")
+        .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
+        .build();
+
     PostRequestDto post = PostRequestDto.builder()
         .id(repetitionInfo.getCurrentRepetition() + createdDefaultPost)
         .title("블로그 포스팅 테스트1")
         .content("블로그에 글을 적는 건 즐거워")
         .thumbnail("thumbnail 이미지")
-        .author("최한울")
+        .author(won)
         .views(85)
         .likes(3)
         .tags("hamill")

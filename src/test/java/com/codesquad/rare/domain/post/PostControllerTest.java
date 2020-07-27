@@ -165,12 +165,17 @@ class PostControllerTest {
   @Test
   public void create_post_spring_rest_docs() throws Exception {
     //given
+    Account won = Account.builder()
+        .id(1L)
+        .name("won")
+        .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
+        .build();
     Random random = new Random();
     PostRequestDto postRequestDto = PostRequestDto.builder()
         .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
-        .author("won")
+        .author(won)
         .likes(random.nextInt(99))
         .tags("1번")
         .views(random.nextInt(999))
@@ -214,12 +219,17 @@ class PostControllerTest {
   @Test
   public void delete_post_spring_rest_docs() throws Exception {
     //given
+    Account won = Account.builder()
+        .id(1L)
+        .name("won")
+        .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
+        .build();
     Random random = new Random();
     PostRequestDto postRequestDto = PostRequestDto.builder()
         .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
-        .author("won")
+        .author(won)
         .likes(random.nextInt(99))
         .tags("1번")
         .views(random.nextInt(999))

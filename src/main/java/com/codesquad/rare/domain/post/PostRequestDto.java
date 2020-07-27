@@ -1,5 +1,6 @@
 package com.codesquad.rare.domain.post;
 
+import com.codesquad.rare.domain.account.Account;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class PostRequestDto {
 
   private String thumbnail;
 
-  private String author;
+  private Account author;
 
   private Integer views;
 
