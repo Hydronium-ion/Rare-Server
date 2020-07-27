@@ -14,8 +14,6 @@ public class PostService {
 
   private final PostRepository postRepository;
 
-  EntityManager entityManager;
-
   public PostService(PostRepository postRepository) {
     this.postRepository = postRepository;
   }

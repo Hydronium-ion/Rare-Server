@@ -26,9 +26,5 @@ public class PostRequestDto {
 
   private Account author;
 
-  private Integer views;
-
-  private Integer likes;
-
   private String tags;
 }

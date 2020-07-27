@@ -68,8 +68,8 @@ public class Post {
         .content(postRequestDto.getContent())
         .thumbnail(postRequestDto.getThumbnail())
         .author(postRequestDto.getAuthor())
-        .views(postRequestDto.getViews())
-        .likes(postRequestDto.getLikes())
+        .views(0)
+        .likes(0)
         .tags(postRequestDto.getTags())
         .createdAt(LocalDateTime.now())
         .build();
