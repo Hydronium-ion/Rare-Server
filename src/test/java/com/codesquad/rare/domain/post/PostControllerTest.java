@@ -4,8 +4,6 @@ import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentRequ
 import static com.codesquad.rare.document.utils.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
@@ -18,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,13 +24,11 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
@@ -49,18 +44,6 @@ class PostControllerTest {
 
   @MockBean
   PostService postService;
-
-//  @BeforeEach
-//  public void setUp(WebApplicationContext webApplicationContext,
-//      RestDocumentationContextProvider restDocumentation) {
-//    this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-//        .apply(documentationConfiguration(restDocumentation)
-//            .operationPreprocessors()
-//            .withRequestDefaults(prettyPrint())
-//            .withResponseDefaults(prettyPrint())
-//        )
-//        .build();
-//  }
 
   @DisplayName("메인 페이지 조회 ")
   @Test
@@ -83,7 +66,7 @@ class PostControllerTest {
         .likes(random.nextInt(99))
         .tags("1번")
         .views(random.nextInt(999))
-        .createdTimeAt(LocalDateTime.now())
+        .createdAt(LocalDateTime.now())
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
@@ -95,7 +78,7 @@ class PostControllerTest {
         .likes(random.nextInt(99))
         .tags("2번")
         .views(random.nextInt(999))
-        .createdTimeAt(LocalDateTime.now())
+        .createdAt(LocalDateTime.now())
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
@@ -146,7 +129,7 @@ class PostControllerTest {
                 fieldWithPath("response.[].tags")
                     .description("포스트 태그")
                     .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].createdTimeAt")
+                fieldWithPath("response.[].createdAt")
                     .description("포스트 생성 시간")
                     .type(JsonFieldType.STRING)
             )));
