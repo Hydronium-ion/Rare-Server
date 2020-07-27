@@ -32,6 +32,10 @@ include::{snippets}/post-controller-test/find_all_posts/response-fields.adoc[]
 
 include::{snippets}/post-controller-test/create_post_spring_rest_docs/http-request.adoc[]
 
+==== Request Fields
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/request-fields.adoc[]
+
 ==== Response
 
 include::{snippets}/post-controller-test/create_post_spring_rest_docs/http-response.adoc[]

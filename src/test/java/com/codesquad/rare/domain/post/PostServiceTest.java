@@ -2,7 +2,6 @@ package com.codesquad.rare.domain.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
@@ -44,7 +43,7 @@ class PostServiceTest {
         .views(85)
         .likes(3)
         .tags("hamill")
-        .createdTimeAt(LocalDateTime.now())
+//        .createdTimeAt(LocalDateTime.now())
         .build();
 
     //when
@@ -69,7 +68,6 @@ class PostServiceTest {
         .views(85)
         .likes(3)
         .tags("hamill")
-        .createdTimeAt(LocalDateTime.now())
         .build();
 
     //when
@@ -93,17 +91,17 @@ class PostServiceTest {
     assertThat(result.getId()).isEqualTo(postId);
   }
 
-  @DisplayName("포스트 반복 삭제 테스트")
-  @RepeatedTest(value = 3,name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
-  void delete_third_OnePassTheOthersFailure() {
-    System.out.println("히히");
-    //given
-    Long postId = 1L;
-
-    //when
-    Post result = postService.delete(postId);
-
-    //then
-    assertThat(result.getId()).isEqualTo(postId);
-  }
+//  @DisplayName("포스트 반복 삭제 테스트")
+//  @RepeatedTest(value = 3,name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
+//  void delete_third_OnePassTheOthersFailure() {
+//    System.out.println("히히");
+//    //given
+//    Long postId = 1L;
+//
+//    //when
+//    Post result = postService.delete(postId);
+//
+//    //then
+//    assertThat(result.getId()).isEqualTo(postId);
+//  }
 }
