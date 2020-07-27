@@ -1,4 +1,4 @@
-package com.codesquad.rare.domain;
+package com.codesquad.rare.domain.account;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,20 +13,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Entity
 public class Account {
 
   @Id
-  @Column(name = "user_id")
+  @Column(name = "account_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String email;
-
-  private String login;
+  private String name;
 
   private String avatarUrl;
-
 }
