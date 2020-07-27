@@ -1,5 +1,6 @@
 package com.codesquad.rare.domain.post;
 
+import com.codesquad.rare.domain.account.Account;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -7,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @JsonPropertyOrder({
     "id",
@@ -45,7 +49,9 @@ public class Post {
 
   private String thumbnail;
 
-  private String author;
+  @ManyToOne
+  @JoinColumn(name = "account_id")
+  private Account author;
 
   private Integer views;
 
