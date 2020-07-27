@@ -4,6 +4,8 @@ package com.codesquad.rare.domain.post;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -11,6 +13,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,7 +36,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -63,8 +66,7 @@ class PostControllerTest {
         .addFilter(new CharacterEncodingFilter("UTF-8", true))
         .apply(documentationConfiguration(restDocumentation)
             .operationPreprocessors()
-            .withResponseDefaults(prettyPrint())
-        )
+            .withResponseDefaults(prettyPrint()))
         .build();
   }
 
@@ -158,7 +160,7 @@ class PostControllerTest {
             )));
   }
 
-  @DisplayName("포스트 생성")
+  @DisplayName("포스트 생성 Spring Rest Docs")
   @Test
   public void create_post_spring_rest_docs() throws Exception {
     //given
@@ -179,7 +181,7 @@ class PostControllerTest {
 
     //when
     ResultActions result =
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/posts")
+        this.mockMvc.perform(post("/posts")
             .content(asJsonString(postRequestDto))
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
@@ -206,4 +208,48 @@ class PostControllerTest {
         )
     ));
    }
+
+  @DisplayName("포스트 삭제 Spring Rest Docs")
+  @Test
+  public void delete_post_spring_rest_docs() throws Exception {
+    //given
+    Random random = new Random();
+    PostRequestDto postRequestDto = PostRequestDto.builder()
+        .id(1L)
+        .title("1번째 포스팅 입니다")
+        .content("이런 저런 내용이 담겨있어요")
+        .author("won")
+        .likes(random.nextInt(99))
+        .tags("1번")
+        .views(random.nextInt(999))
+        .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
+        .build();
+
+    postService.save(postRequestDto);
+
+    String postId = "1";
+
+    Post post = postService.findById(postRequestDto.getId());
+    given(postService.delete(postRequestDto.getId())).willReturn(post);
+
+    //when
+    ResultActions result = this.mockMvc.perform(delete("/posts/{id}", 1)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+
+    //then
+    result.andDo(document("{class-name}/{method-name}",
+        preprocessRequest(prettyPrint()),
+        preprocessResponse(prettyPrint()),
+        pathParameters(
+            parameterWithName("id").description("삭제할 포스트의 ID")
+        ),
+        responseFields(
+            fieldWithPath("success").description("성공 유무").type(JsonFieldType.BOOLEAN),
+            fieldWithPath("response").description("응답 메세지").type(JsonFieldType.STRING),
+            fieldWithPath("error").description("HTTP 상태 코드").type(JsonFieldType.NULL)
+        )
+    ));
+  }
 }

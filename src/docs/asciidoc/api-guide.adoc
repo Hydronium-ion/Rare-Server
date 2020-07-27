@@ -44,3 +44,20 @@ include::{snippets}/post-controller-test/create_post_spring_rest_docs/http-respo
 
 include::{snippets}/post-controller-test/create_post_spring_rest_docs/response-fields.adoc[]
 
+=== 포스트 삭제 API
+
+==== Path Parameters
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/path-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/response-fields.adoc[]
