@@ -3,7 +3,7 @@
 REPOSITORY=/home/ubuntu/rare
 cd $REPOSITORY
 
-APP_NAME=action_codedeploy
+APP_NAME=rare
 JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 
