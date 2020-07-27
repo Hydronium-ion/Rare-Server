@@ -1,65 +1,32 @@
 package com.codesquad.rare.domain.post;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 import com.codesquad.rare.domain.account.Account;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 class PostServiceTest {
 
   private final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
 
-  @Autowired
-  private WebApplicationContext context;
-
-  private MockMvc mockMvc;
-
-  @Autowired
+  @MockBean
   private PostService postService;
 
-  @DisplayName("포스트 생성 테스트")
-  @Test
-  public void create() throws Exception {
-    //given
-    Account won = Account.builder()
-        .id(1L)
-        .name("won")
-        .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
-        .build();
-
-    PostRequestDto post = PostRequestDto.builder()
-        .id(11L)
-        .title("블로그 포스팅 테스트1")
-        .content("블로그에 글을 적는 건 즐거워")
-        .thumbnail("thumbnail 이미지")
-        .author(won)
-        .views(85)
-        .likes(3)
-        .tags("hamill")
-//        .createdTimeAt(LocalDateTime.now())
-        .build();
-
-    //when
-    Post result = postService.save(post);
-
-    //then
-    assertThat(result.getId()).isEqualTo(11L);
-  }
-
+  /**
+   * 같은 포스트라도 반복적으로 ID 값만 다르다면 모두 생성할 수 있어야 합니다.
+   * 같은 포스트를 10번 반복 생성해보는 테스트입니다.
+   */
   @DisplayName("같은 포스트 반복 생성 테스트")
   @RepeatedTest(value = 10, name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
   void create_tenTimes_AllPass(RepetitionInfo repetitionInfo) throws Exception {
@@ -78,10 +45,10 @@ class PostServiceTest {
         .content("블로그에 글을 적는 건 즐거워")
         .thumbnail("thumbnail 이미지")
         .author(won)
-        .views(85)
-        .likes(3)
         .tags("hamill")
         .build();
+
+    given(postService.save(post)).willReturn(Post.from(post));
 
     //when
     Post result = postService.save(post);
@@ -91,22 +58,14 @@ class PostServiceTest {
         .isEqualTo(repetitionInfo.getCurrentRepetition() + createdDefaultPost);
   }
 
-  @DisplayName("포스트 삭제 테스트")
-  @Test
-  void delete() throws Exception {
-    //given
-    Long postId = 1L;
-
-    //when
-    Post result = postService.delete(postId);
-
-    //then
-    assertThat(result.getId()).isEqualTo(postId);
-  }
-
+  /**
+   * 포스트는 1번만 삭제되어야 하고, 같은 포스트는 2번 이상 삭제 될 수 없습니다.
+   * 같은 포스트를 여러번 삭제가 되는지 테스트하고,
+   * 삭제되지 않을 때 발생하는 Exception을 테스트합니다.
+   */
 //  @DisplayName("포스트 반복 삭제 테스트")
 //  @RepeatedTest(value = 3,name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
-//  void delete_third_OnePassTheOthersFailure() {
+//  void delete_third_OnePassTheOthersFailure(RepetitionInfo repetitionInfo) {
 //    System.out.println("히히");
 //    //given
 //    Long postId = 1L;
@@ -115,6 +74,6 @@ class PostServiceTest {
 //    Post result = postService.delete(postId);
 //
 //    //then
-//    assertThat(result.getId()).isEqualTo(postId);
+//
 //  }
 }
