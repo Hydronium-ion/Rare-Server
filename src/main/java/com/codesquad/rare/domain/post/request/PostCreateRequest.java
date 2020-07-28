@@ -1,7 +1,5 @@
-package com.codesquad.rare.domain.post;
+package com.codesquad.rare.domain.post.request;
 
-import com.codesquad.rare.domain.account.Account;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-public class PostRequestDto {
+public class PostCreateRequest {
 
   private String title;
 
@@ -22,7 +20,7 @@ public class PostRequestDto {
 
   private String thumbnail;
 
-  private Account author;
+  private Long authorId;
 
   private String tags;
 }
