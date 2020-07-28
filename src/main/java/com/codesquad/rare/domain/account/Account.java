@@ -17,7 +17,6 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Entity
-@ToString
 public class Account {
 
   @Id
