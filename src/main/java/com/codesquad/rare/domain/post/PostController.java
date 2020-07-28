@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
   private final PostService postService;
+  private static final String DEFAULT_PAGE = "0";
+  private static final String DEFAULT_SIZE = "20";
 
   @GetMapping
   public ApiResult<List<Post>> main() {
@@ -50,8 +52,10 @@ public class PostController {
   }
 
   // 포스트를 좋아요 수를 기준으로 내림차순 출력
-  @GetMapping("/lists/liked")
-  public List<Post> findPostsByLikesInDescendingOrder(@RequestParam Integer page, Integer size) {
-    return postService.findPostsByLikesInDescendingOrder(page, size);
+  @GetMapping("/likes")
+  public ApiResult<List<Post>> findPostsByLikesInDescendingOrder(
+      @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE) Integer page,
+      @RequestParam(value = "size", required = false, defaultValue = DEFAULT_SIZE) Integer size) {
+    return OK(postService.findPostsByLikesInDescendingOrder(page, size));
   }
 }

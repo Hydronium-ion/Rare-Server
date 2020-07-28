@@ -61,3 +61,21 @@ include::{snippets}/post-controller-test/delete_post_spring_rest_docs/http-respo
 ==== Response Fields
 
 include::{snippets}/post-controller-test/delete_post_spring_rest_docs/response-fields.adoc[]
+
+=== 좋아요 수를 기준으로 내림차순 출력 API
+
+==== Request Parameter
+
+include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/request-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/response-fields.adoc[]
