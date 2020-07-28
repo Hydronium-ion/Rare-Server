@@ -38,13 +38,13 @@ public class PostController {
   @PostMapping
   public ApiResult save(@RequestBody PostRequestDto postRequestDto) {
     postService.save(postRequestDto);
-    return OK("포스트 생성 성공");
+    return OK("true");
   }
 
   //Post 를 삭제합니다.
   @DeleteMapping("/{id}")
   public ApiResult delete(@PathVariable("id") Long postId) {
     postService.delete(postId);
-    return OK("포스트 삭제 성공");
+    return OK("true");
   }
 }
