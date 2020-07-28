@@ -63,7 +63,6 @@ public class Post {
 
   public static Post from(PostRequestDto postRequestDto) {
     return Post.builder()
-        .id(postRequestDto.getId())
         .title(postRequestDto.getTitle())
         .content(postRequestDto.getContent())
         .thumbnail(postRequestDto.getThumbnail())

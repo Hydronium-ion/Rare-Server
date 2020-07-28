@@ -17,10 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codesquad.rare.domain.account.Account;
+import com.codesquad.rare.error.exeception.NotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +53,9 @@ class PostControllerTest {
 
   @MockBean
   PostService postService;
+
+  @MockBean
+  PostRepository postRepository;
 
   public static String asJsonString(final Object obj) {
     try {
@@ -161,7 +166,6 @@ class PostControllerTest {
         .build();
 
     PostRequestDto postRequestDto = PostRequestDto.builder()
-        .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
         .author(won)
@@ -169,7 +173,6 @@ class PostControllerTest {
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
-    log.info("postRequestDto: {}", postRequestDto);
     Post post = Post.from(postRequestDto);
     given(postService.save(postRequestDto)).willReturn(post);
 
@@ -186,7 +189,6 @@ class PostControllerTest {
         getDocumentRequest(),
         getDocumentResponse(),
         requestFields(
-            fieldWithPath("id").description("포스트 ID 번호").type(JsonFieldType.NUMBER),
             fieldWithPath("title").description("포스트 제목").type(JsonFieldType.STRING),
             fieldWithPath("content").description("포스트 내용").type(JsonFieldType.STRING),
             fieldWithPath("thumbnail").description("포스트 썸네일 이미지").type(JsonFieldType.STRING),
@@ -214,19 +216,20 @@ class PostControllerTest {
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
 
-    PostRequestDto postRequestDto = PostRequestDto.builder()
+    Post post = Post.builder()
         .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
-        .author(won)
-        .tags("1번")
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
+        .author(won)
+        .views(0)
+        .likes(0)
+        .tags("1번")
+        .createdAt(LocalDateTime.now())
         .build();
 
-    postService.save(postRequestDto);
-
-    Post post = postService.findById(postRequestDto.getId());
-    given(postService.delete(postRequestDto.getId())).willReturn(post);
+    postRepository.save(post);
+    given(postService.delete(post.getId())).willReturn(post);
 
     //when
     ResultActions result = this.mockMvc.perform(delete("/posts/{id}", 1)

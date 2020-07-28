@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,6 +24,9 @@ class PostServiceTest {
   @MockBean
   private PostService postService;
 
+  @MockBean
+  private PostRepository postRepository;
+
   /**
    * 같은 포스트라도 반복적으로 ID 값만 다르다면 모두 생성할 수 있어야 합니다.
    * 같은 포스트를 10번 반복 생성해보는 테스트입니다.
@@ -31,7 +35,7 @@ class PostServiceTest {
   @RepeatedTest(value = 10, name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
   void create_tenTimes_AllPass(RepetitionInfo repetitionInfo) throws Exception {
     //given
-    Long createdDefaultPost = 10L; // 처음 생성 되는 글 10개
+    Long postId = (long)repetitionInfo.getCurrentRepetition();
 
     Account won = Account.builder()
         .id(1L)
@@ -39,8 +43,8 @@ class PostServiceTest {
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
 
-    PostRequestDto post = PostRequestDto.builder()
-        .id(repetitionInfo.getCurrentRepetition() + createdDefaultPost)
+    Post post = Post.builder()
+        .id(postId)
         .title("블로그 포스팅 테스트1")
         .content("블로그에 글을 적는 건 즐거워")
         .thumbnail("thumbnail 이미지")
@@ -48,14 +52,13 @@ class PostServiceTest {
         .tags("hamill")
         .build();
 
-    given(postService.save(post)).willReturn(Post.from(post));
+    given(postRepository.save(post)).willReturn(post);
 
     //when
-    Post result = postService.save(post);
+    Post result = postRepository.save(post);
 
     //then
-    assertThat(result.getId())
-        .isEqualTo(repetitionInfo.getCurrentRepetition() + createdDefaultPost);
+    assertThat(result.getId()).isEqualTo(postId);
   }
 
   /**

@@ -16,8 +16,6 @@ import lombok.ToString;
 @ToString
 public class PostRequestDto {
 
-  private Long id;
-
   private String title;
 
   private String content;
