@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -46,5 +47,11 @@ public class PostController {
   public ApiResult delete(@PathVariable("id") Long postId) {
     postService.delete(postId);
     return OK("true");
+  }
+
+  // 포스트를 좋아요 수를 기준으로 내림차순 출력
+  @GetMapping("/lists/liked")
+  public List<Post> findPostsByLikesInDescendingOrder(@RequestParam Integer page, Integer size) {
+    return postService.findPostsByLikesInDescendingOrder(page, size);
   }
 }
