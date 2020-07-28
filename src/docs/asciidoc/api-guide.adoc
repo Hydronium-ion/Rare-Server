@@ -25,3 +25,39 @@ include::{snippets}/post-controller-test/find_all_posts/http-response.adoc[]
 ==== Response Fields
 
 include::{snippets}/post-controller-test/find_all_posts/response-fields.adoc[]
+
+=== 포스트 생성 API
+
+==== Request
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/http-request.adoc[]
+
+==== Request Fields
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/create_post_spring_rest_docs/response-fields.adoc[]
+
+=== 포스트 삭제 API
+
+==== Path Parameters
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/path-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/delete_post_spring_rest_docs/response-fields.adoc[]

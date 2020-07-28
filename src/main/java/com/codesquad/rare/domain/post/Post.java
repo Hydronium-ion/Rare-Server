@@ -60,4 +60,17 @@ public class Post {
   private String tags;
 
   private LocalDateTime createdAt;
+
+  public static Post from(PostRequestDto postRequestDto) {
+    return Post.builder()
+        .title(postRequestDto.getTitle())
+        .content(postRequestDto.getContent())
+        .thumbnail(postRequestDto.getThumbnail())
+        .author(postRequestDto.getAuthor())
+        .views(0)
+        .likes(0)
+        .tags(postRequestDto.getTags())
+        .createdAt(LocalDateTime.now())
+        .build();
+  }
 }
