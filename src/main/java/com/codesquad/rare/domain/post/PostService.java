@@ -43,8 +43,8 @@ public class PostService {
     return post;
   }
 
-  public List<Post> findPostsByLikesInDescendingOrder(Integer page, Integer size) {
-    PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likes").descending());
+  public List<Post> findAllByLikesInDescendingOrder(Integer page, Integer size) {
+    PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likes").descending(), );
     return postRepository.findAll(pageRequest).getContent();
   }
 }
