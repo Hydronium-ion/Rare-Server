@@ -1,6 +1,7 @@
 package com.codesquad.rare.domain.post;
 
 import com.codesquad.rare.domain.account.Account;
+import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -40,10 +41,10 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  //TODO title not nullable length 설정
+  @Column(length = 100)
   private String title;
 
-  //TODO content nullable, length 설정
+  @Lob
   private String content;
 
   @Lob
@@ -60,4 +61,17 @@ public class Post {
   private String tags;
 
   private LocalDateTime createdAt;
+
+  public static Post toEntity(PostCreateRequest postCreateRequest, Account author) {
+    return Post.builder()
+        .title(postCreateRequest.getTitle())
+        .content(postCreateRequest.getContent())
+        .thumbnail(postCreateRequest.getThumbnail())
+        .author(author)
+        .views(0)
+        .likes(0)
+        .tags(postCreateRequest.getTags())
+        .createdAt(LocalDateTime.now())
+        .build();
+  }
 }

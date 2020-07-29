@@ -25,3 +25,57 @@ include::{snippets}/post-controller-test/find_all_posts/http-response.adoc[]
 ==== Response Fields
 
 include::{snippets}/post-controller-test/find_all_posts/response-fields.adoc[]
+
+=== 포스트 조회
+
+==== Path Parameters
+
+include::{snippets}/post-controller-test/find_post_by_id/path-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/post-controller-test/find_post_by_id/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/find_post_by_id/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/find_post_by_id/response-fields.adoc[]
+
+=== 포스트 생성
+
+==== Request
+
+include::{snippets}/post-controller-test/create_post/http-request.adoc[]
+
+==== Request Fields
+
+include::{snippets}/post-controller-test/create_post/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/create_post/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/create_post/response-fields.adoc[]
+
+=== 포스트 삭제
+
+==== Path Parameters
+
+include::{snippets}/post-controller-test/delete_post/path-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/post-controller-test/delete_post/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/post-controller-test/delete_post/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/post-controller-test/delete_post/response-fields.adoc[]
