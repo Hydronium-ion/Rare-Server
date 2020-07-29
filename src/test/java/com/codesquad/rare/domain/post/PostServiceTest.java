@@ -1,15 +1,13 @@
 package com.codesquad.rare.domain.post;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import com.codesquad.rare.domain.account.Account;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,20 +20,16 @@ class PostServiceTest {
   private final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
 
   @MockBean
-  private PostService postService;
-
-  @MockBean
   private PostRepository postRepository;
 
   /**
-   * 같은 포스트라도 반복적으로 ID 값만 다르다면 모두 생성할 수 있어야 합니다.
-   * 같은 포스트를 10번 반복 생성해보는 테스트입니다.
+   * 같은 포스트라도 반복적으로 ID 값만 다르다면 모두 생성할 수 있어야 합니다. 같은 포스트를 10번 반복 생성해보는 테스트입니다.
    */
   @DisplayName("같은 포스트 반복 생성 테스트")
   @RepeatedTest(value = 10, name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
-  void create_tenTimes_AllPass(RepetitionInfo repetitionInfo) throws Exception {
+  void create_tenTimes_AllPass(RepetitionInfo repetitionInfo) {
     //given
-    Long postId = (long)repetitionInfo.getCurrentRepetition();
+    Long postId = (long) repetitionInfo.getCurrentRepetition();
 
     Account won = Account.builder()
         .id(1L)
