@@ -132,41 +132,18 @@ class PostControllerTest {
             getDocumentRequest(),
             getDocumentResponse(),
             responseFields(
-                fieldWithPath("success")
-                    .description("성공 여부")
-                    .type(JsonFieldType.BOOLEAN),
-                fieldWithPath("error")
-                    .description("에러 여부(발생 시, 어떠한 에러인지 기재)")
-                    .type(JsonFieldType.NULL),
-                subsectionWithPath("response")
-                    .description("응답"),
-                fieldWithPath("response.[].id")
-                    .description("포스트 ID 번호(고유한 값)")
-                    .type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].title")
-                    .description("포스트 제목")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].content")
-                    .description("포스트 내용")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].thumbnail")
-                    .description("포스트 썸네일")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].author")
-                    .description("포스트 저자")
-                    .type(JsonFieldType.OBJECT),
-                fieldWithPath("response.[].views")
-                    .description("포스트 조회")
-                    .type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].likes")
-                    .description("포스트 좋아요 수")
-                    .type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].tags")
-                    .description("포스트 태그")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].createdAt")
-                    .description("포스트 생성 시간")
-                    .type(JsonFieldType.STRING)
+                fieldWithPath("success").description("성공 여부").type(JsonFieldType.BOOLEAN),
+                fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL),
+                subsectionWithPath("response").description("응답"),
+                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].title").description("포스트 제목").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].content").description("포스트 내용").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].thumbnail").description("포스트 썸네일").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].author").description("포스트 저자").type(JsonFieldType.OBJECT),
+                fieldWithPath("response.[].views").description("포스트 조회").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].tags").description("포스트 태그").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
             )));
   }
 
@@ -203,35 +180,17 @@ class PostControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
-                    fieldWithPath("title")
-                        .description("포스트 제목")
-                        .type(JsonFieldType.STRING),
-                    fieldWithPath("content")
-                        .description("포스트 내용")
-                        .type(JsonFieldType.STRING),
-                    fieldWithPath("thumbnail")
-                        .description("포스트 썸네일 이미지")
-                        .type(JsonFieldType.STRING),
-                    fieldWithPath("authorId")
-                        .description("포스트 작성자의 ID")
-                        .type(JsonFieldType.NUMBER),
-                    fieldWithPath("tags")
-                        .description("포스트 태그")
-                        .type(JsonFieldType.STRING)
+                    fieldWithPath("title").description("포스트 제목").type(JsonFieldType.STRING),
+                    fieldWithPath("content").description("포스트 내용").type(JsonFieldType.STRING),
+                    fieldWithPath("thumbnail").description("포스트 썸네일 이미지").type(JsonFieldType.STRING),
+                    fieldWithPath("authorId").description("포스트 작성자 ID").type(JsonFieldType.NUMBER),
+                    fieldWithPath("tags").description("포스트 태그").type(JsonFieldType.STRING)
                 ),
                 responseFields(
-                    fieldWithPath("success")
-                        .description("성공 유무")
-                        .type(JsonFieldType.BOOLEAN),
-                    fieldWithPath("response")
-                        .description("응답 메세지")
-                        .type(JsonFieldType.OBJECT),
-                    fieldWithPath("response.postId")
-                        .description("생성된 포스트 ID")
-                        .type(JsonFieldType.NUMBER),
-                    fieldWithPath("error")
-                        .description("HTTP 상태 코드")
-                        .type(JsonFieldType.NULL)
+                    fieldWithPath("success").description("성공 유무").type(JsonFieldType.BOOLEAN),
+                    fieldWithPath("response").description("응답").type(JsonFieldType.OBJECT),
+                    fieldWithPath("response.postId").description("생성된 포스트 ID").type(JsonFieldType.NUMBER),
+                    fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL)
                 )
             ));
   }
@@ -259,8 +218,8 @@ class PostControllerTest {
             ),
             responseFields(
                 fieldWithPath("success").description("성공 유무").type(JsonFieldType.BOOLEAN),
-                fieldWithPath("response").description("응답 메세지").type(JsonFieldType.BOOLEAN),
-                fieldWithPath("error").description("HTTP 상태 코드").type(JsonFieldType.NULL)
+                fieldWithPath("response").description("응답").type(JsonFieldType.BOOLEAN),
+                fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL)
             )
         ));
   }
@@ -278,7 +237,7 @@ class PostControllerTest {
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
 
-    Post post1 = Post.builder()
+    Post post = Post.builder()
         .id(1L)
         .title("1번째 포스팅 입니다")
         .content("이런 저런 내용이 담겨있어요")
@@ -290,7 +249,7 @@ class PostControllerTest {
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
-    given(postController.findByPostId(1L)).willReturn(OK(post1));
+    given(postController.findByPostId(1L)).willReturn(OK(post));
 
     //when
     ResultActions result = mockMvc.perform(get("/posts/{id}", 1L)
@@ -307,41 +266,17 @@ class PostControllerTest {
                 parameterWithName("id").description("포스트 ID")
             ),
             responseFields(
-                fieldWithPath("success")
-                    .description("성공 여부")
-                    .type(JsonFieldType.BOOLEAN),
-                fieldWithPath("error")
-                    .description("에러 여부(발생 시, 어떠한 에러인지 기재)")
-                    .type(JsonFieldType.NULL),
-                subsectionWithPath("response")
-                    .description("응답"),
-                fieldWithPath("response.id")
-                    .description("포스트 ID 번호(고유한 값)")
-                    .type(JsonFieldType.NUMBER),
-                fieldWithPath("response.title")
-                    .description("포스트 제목")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.content")
-                    .description("포스트 내용")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.thumbnail")
-                    .description("포스트 썸네일")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.author")
-                    .description("포스트 저자")
-                    .type(JsonFieldType.OBJECT),
-                fieldWithPath("response.views")
-                    .description("포스트 조회")
-                    .type(JsonFieldType.NUMBER),
-                fieldWithPath("response.likes")
-                    .description("포스트 좋아요 수")
-                    .type(JsonFieldType.NUMBER),
-                fieldWithPath("response.tags")
-                    .description("포스트 태그")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.createdAt")
-                    .description("포스트 생성 시간")
-                    .type(JsonFieldType.STRING)
+                fieldWithPath("success").description("성공 여부").type(JsonFieldType.BOOLEAN),
+                fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL),
+                subsectionWithPath("response").description("응답"),
+                fieldWithPath("response.id").description("포스트 ID 번호(고유한 값)").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.title").description("포스트 제목").type(JsonFieldType.STRING),
+                fieldWithPath("response.content").description("포스트 내용").type(JsonFieldType.STRING),
+                fieldWithPath("response.thumbnail").description("포스트 썸네일").type(JsonFieldType.STRING),
+                fieldWithPath("response.author").description("포스트 저자").type(JsonFieldType.OBJECT),
+                fieldWithPath("response.views").description("포스트 조회").type(JsonFieldType.NUMBER), fieldWithPath("response.likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.tags").description("포스트 태그").type(JsonFieldType.STRING),
+                fieldWithPath("response.createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
             )));
   }
 }

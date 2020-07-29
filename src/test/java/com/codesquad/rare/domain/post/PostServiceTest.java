@@ -20,20 +20,16 @@ class PostServiceTest {
   private final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
 
   @MockBean
-  private PostService postService;
-
-  @MockBean
   private PostRepository postRepository;
 
   /**
-   * 같은 포스트라도 반복적으로 ID 값만 다르다면 모두 생성할 수 있어야 합니다.
-   * 같은 포스트를 10번 반복 생성해보는 테스트입니다.
+   * 같은 포스트라도 반복적으로 ID 값만 다르다면 모두 생성할 수 있어야 합니다. 같은 포스트를 10번 반복 생성해보는 테스트입니다.
    */
   @DisplayName("같은 포스트 반복 생성 테스트")
   @RepeatedTest(value = 10, name = "{currentRepetition}/{totalRepetitions} 번째 테스트")
-  void create_tenTimes_AllPass(RepetitionInfo repetitionInfo) throws Exception {
+  void create_tenTimes_AllPass(RepetitionInfo repetitionInfo) {
     //given
-    Long postId = (long)repetitionInfo.getCurrentRepetition();
+    Long postId = (long) repetitionInfo.getCurrentRepetition();
 
     Account won = Account.builder()
         .id(1L)
