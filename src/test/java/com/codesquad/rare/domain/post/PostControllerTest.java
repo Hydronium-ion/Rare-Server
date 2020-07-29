@@ -119,7 +119,7 @@ class PostControllerTest {
         .build();
 
     List<Post> posts = Arrays.asList(post1, post2);
-    given(postController.findAllOrderByCreateAt()).willReturn(OK(posts));
+    given(postController.findAllInLatestOrder()).willReturn(OK(posts));
 
     //when
     ResultActions result = mockMvc.perform(get("/posts")
@@ -163,7 +163,7 @@ class PostControllerTest {
     response.setPostId(1L);
     log.debug("response : {}", response);
     log.debug("create : {}", postCreateRequest);
-    given(postController.save(any())).willReturn(OK(response));
+    given(postController.create(any())).willReturn(OK(response));
 
     //when
     ResultActions result = mockMvc.perform(post("/posts")
@@ -249,7 +249,7 @@ class PostControllerTest {
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
         .build();
 
-    given(postController.findByPostId(1L)).willReturn(OK(post));
+    given(postController.findById(1L)).willReturn(OK(post));
 
     //when
     ResultActions result = mockMvc.perform(get("/posts/{id}", 1L)

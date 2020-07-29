@@ -25,17 +25,17 @@ public class PostController {
   private final PostService postService;
 
   @GetMapping
-  public ApiResult<List<Post>> findAllOrderByCreateAt() {
+  public ApiResult<List<Post>> findAllInLatestOrder() {
     return OK(postService.findAllAndOrderByCreatedAtDesc());
   }
 
   @GetMapping("{id}")
-  public ApiResult<Post> findByPostId(@PathVariable(value = "id") Long id) {
-    return OK(postService.findById(id));
+  public ApiResult<Post> findById(@PathVariable(value = "id") Long postId) {
+    return OK(postService.findById(postId));
   }
 
   @PostMapping
-  public ApiResult<PostCreateResponse> save(@RequestBody PostCreateRequest postCreateRequest) {
+  public ApiResult<PostCreateResponse> create(@RequestBody PostCreateRequest postCreateRequest) {
     return OK(postService.save(postCreateRequest));
   }
 
