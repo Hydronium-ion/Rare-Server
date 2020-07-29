@@ -3,7 +3,8 @@ package com.codesquad.rare.domain.post;
 import static com.codesquad.rare.common.api.ApiResult.OK;
 
 import com.codesquad.rare.common.api.ApiResult;
-import java.time.LocalDateTime;
+import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.response.PostCreateResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,28 +28,24 @@ public class PostController {
   private static final String DEFAULT_SIZE = "20";
 
   @GetMapping
-  public ApiResult<List<Post>> main() {
-    return OK(postService.findAll());
+  public ApiResult<List<Post>> findAllInLatestOrder() {
+    return OK(postService.findAllAndOrderByCreatedAtDesc());
   }
 
   @GetMapping("{id}")
-  public ApiResult<Post> findByPostId(@PathVariable(value = "id") Long id) {
-    return OK(postService.findById(id));
+  public ApiResult<Post> findById(@PathVariable(value = "id") Long postId) {
+    return OK(postService.findById(postId));
   }
 
-  //Post 를 생성합니다.
-  //method 명은 save, create? 뭐가 좋을까요?
   @PostMapping
-  public ApiResult save(@RequestBody PostRequestDto postRequestDto) {
-    postService.save(postRequestDto);
-    return OK("true");
+  public ApiResult<PostCreateResponse> create(@RequestBody PostCreateRequest postCreateRequest) {
+    return OK(postService.save(postCreateRequest));
   }
 
-  //Post 를 삭제합니다.
   @DeleteMapping("/{id}")
   public ApiResult delete(@PathVariable("id") Long postId) {
     postService.delete(postId);
-    return OK("true");
+    return OK(true);
   }
 
   // 포스트를 좋아요 수를 기준으로 내림차순 출력

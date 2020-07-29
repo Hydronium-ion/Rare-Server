@@ -1,8 +1,12 @@
 package com.codesquad.rare.domain.post;
 
+import com.codesquad.rare.domain.account.Account;
+import com.codesquad.rare.domain.account.AccountRepository;
+import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.response.PostCreateResponse;
 import com.codesquad.rare.error.exeception.NotFoundException;
 import java.util.List;
-import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -10,17 +14,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class PostService {
 
   private final PostRepository postRepository;
 
-  public PostService(PostRepository postRepository) {
-    this.postRepository = postRepository;
-  }
+  private final AccountRepository accountRepository;
 
-  public List<Post> findAll() {
+  public List<Post> findAllAndOrderByCreatedAtDesc() {
     return postRepository.findAllByOrderByCreatedAtDesc();
   }
 
@@ -30,9 +33,13 @@ public class PostService {
   }
 
   @Transactional
-  public Post save(PostRequestDto postRequestDto) {
-    Post post = Post.from(postRequestDto);
-    return postRepository.save(post);
+  public PostCreateResponse save(PostCreateRequest postCreateRequest) {
+    Account author = accountRepository.findById(postCreateRequest.getAuthorId())
+        .orElseThrow(() -> new NotFoundException(Account.class, postCreateRequest.getAuthorId()));
+    Post savedPost = postRepository.save(Post.toEntity(postCreateRequest, author));
+    PostCreateResponse response = new PostCreateResponse();
+    response.setPostId(savedPost.getId());
+    return response;
   }
 
   @Transactional
