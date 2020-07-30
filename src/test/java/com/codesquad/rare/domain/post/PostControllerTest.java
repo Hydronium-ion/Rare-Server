@@ -17,7 +17,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.subsecti
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -288,7 +287,7 @@ class PostControllerTest {
 
   @DisplayName("포스트를 좋아요 수를 기준으로 내림차순 출력")
   @Test
-  public void find_posts_by_likes_in_descending_order() throws Exception {
+  public void find_all_by_likes_in_descending_order() throws Exception {
     //given
     Random random = new Random();
 
@@ -338,7 +337,8 @@ class PostControllerTest {
     Integer size = 20;
 
     List<Post> posts = Arrays.asList(post3, post2, post1);
-    given(postService.findPostsByLikesInDescendingOrder(page, size)).willReturn(posts);
+    log.info("posts : {}", posts);
+    given(postController.findAllByLikesInDescendingOrder(page, size)).willReturn(OK(posts));
 
     //when
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
