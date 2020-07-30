@@ -84,16 +84,16 @@ include::{snippets}/post-controller-test/delete_post/response-fields.adoc[]
 
 ==== Request Parameter
 
-include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/request-parameters.adoc[]
+include::{snippets}/post-controller-test/find_all_by_likes_in_descending_order/request-parameters.adoc[]
 
 ==== Request
 
-include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/http-request.adoc[]
+include::{snippets}/post-controller-test/find_all_by_likes_in_descending_order/http-request.adoc[]
 
 ==== Response
 
-include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/http-response.adoc[]
+include::{snippets}/post-controller-test/find_all_by_likes_in_descending_order/http-response.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/post-controller-test/find_posts_by_likes_in_descending_order/response-fields.adoc[]
+include::{snippets}/post-controller-test/find_all_by_likes_in_descending_order/response-fields.adoc[]
