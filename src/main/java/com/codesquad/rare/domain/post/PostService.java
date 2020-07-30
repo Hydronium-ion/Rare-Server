@@ -51,7 +51,7 @@ public class PostService {
   }
 
   public List<Post> findAllByLikesInDescendingOrder(Integer page, Integer size) {
-    PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likes").descending(), );
+    PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likes").descending());
     return postRepository.findAll(pageRequest).getContent();
   }
 }
