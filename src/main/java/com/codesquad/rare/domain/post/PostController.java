@@ -48,11 +48,11 @@ public class PostController {
     return OK(true);
   }
 
-  // 포스트를 좋아요 수를 기준으로 내림차순 출력
+  // 좋아요 순으로 내림차순 정렬
   @GetMapping("/likes")
   public ApiResult<List<Post>> findAllByLikesInDescendingOrder(
-      @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE) Integer page,
-      @RequestParam(value = "size", required = false, defaultValue = DEFAULT_SIZE) Integer size) {
+      @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE) int page,
+      @RequestParam(value = "size", required = false, defaultValue = DEFAULT_SIZE) int size) {
     return OK(postService.findAllByLikesInDescendingOrder(page, size));
   }
 }
