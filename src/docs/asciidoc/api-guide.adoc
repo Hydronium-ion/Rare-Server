@@ -12,7 +12,7 @@ Hamil, Han
 
 == Post
 
-=== 메인 페이지 조회 (최신순으로 정렬)
+=== 메인 페이지 조회 (생성시간 순으로 정렬)
 
 ==== Request
 
@@ -80,7 +80,7 @@ include::{snippets}/post-controller-test/delete_post/http-response.adoc[]
 
 include::{snippets}/post-controller-test/delete_post/response-fields.adoc[]
 
-=== 좋아요 수를 기준으로 내림차순 출력 API
+=== 메인 페이지 조회 (좋아요 순으로 정렬)
 
 ==== Request Parameter
 
