@@ -86,7 +86,7 @@ class PostControllerTest {
     }
   }
 
-  @DisplayName("메인 페이지 조회 (생성 시간 기준 오름차순 정렬")
+  @DisplayName("메인 페이지 조회 (생성 시간 기준 내름차순 정렬)")
   @Test
   void find_all_posts() throws Exception {
 
@@ -285,7 +285,7 @@ class PostControllerTest {
             )));
   }
 
-  @DisplayName("포스트를 좋아요 수를 기준으로 내림차순 출력")
+  @DisplayName("메인 페이지 조회 (좋아요 순으로 내름차순 정렬)")
   @Test
   public void find_all_by_likes_in_descending_order() throws Exception {
     //given
