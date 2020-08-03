@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 class PostServiceTest {
 
-  private final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
+  final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
 
   @MockBean
   private PostRepository postRepository;
@@ -40,10 +40,12 @@ class PostServiceTest {
     Post post = Post.builder()
         .id(postId)
         .title("블로그 포스팅 테스트1")
+        .subTitle("보조 제목")
         .content("블로그에 글을 적는 건 즐거워")
         .thumbnail("thumbnail 이미지")
         .author(won)
         .tags("hamill")
+        .isPublic(Boolean.TRUE)
         .build();
 
     given(postRepository.save(post)).willReturn(post);
