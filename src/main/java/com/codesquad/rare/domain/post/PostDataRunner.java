@@ -73,6 +73,7 @@ public class PostDataRunner implements ApplicationRunner {
     Random random = new Random();
     LocalDateTime localDateTime = LocalDateTime.now();
     List<Post> postList = new ArrayList<>();
+    boolean[] rando = new boolean[]{true, false};
     int length = luda.length;
 
     Account won = Account.builder()
@@ -82,9 +83,10 @@ public class PostDataRunner implements ApplicationRunner {
 
     saveAccount(won);
 
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= 99; i++) {
       Post post = Post.builder()
-          .title(i + "번째 포스팅 입니다")
+          .title(i + "번째 제목 입니다")
+          .subTitle(i + "번째 부제목 입니다")
           .content("이런 저런 내용이 담겨있어요")
           .author(won)
           .likes(random.nextInt(99))
@@ -92,6 +94,7 @@ public class PostDataRunner implements ApplicationRunner {
           .views(random.nextInt(999))
           .thumbnail(luda[random.nextInt(length)])
           .createdAt(localDateTime.plusDays(random.nextInt(10 - 5 + 1) + 5))
+          .isPublic(rando[random.nextInt(2)])
           .build();
 
       postList.add(post);
