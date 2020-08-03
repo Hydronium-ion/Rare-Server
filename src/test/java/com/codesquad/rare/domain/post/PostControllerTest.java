@@ -16,6 +16,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +47,8 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -81,7 +86,7 @@ class PostControllerTest {
     }
   }
 
-  @DisplayName("메인 페이지 조회 (생성 시간 기준 오름차순 정렬")
+  @DisplayName("메인 페이지 조회 (생성 시간 기준 내름차순 정렬)")
   @Test
   void find_all_posts() throws Exception {
 
@@ -277,6 +282,97 @@ class PostControllerTest {
                 fieldWithPath("response.views").description("포스트 조회").type(JsonFieldType.NUMBER), fieldWithPath("response.likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
                 fieldWithPath("response.tags").description("포스트 태그").type(JsonFieldType.STRING),
                 fieldWithPath("response.createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
+            )));
+  }
+
+  @DisplayName("메인 페이지 조회 (좋아요 순으로 내름차순 정렬)")
+  @Test
+  public void find_all_by_likes_in_descending_order() throws Exception {
+    //given
+    Random random = new Random();
+
+    Account won = Account.builder()
+        .id(1L)
+        .name("won")
+        .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
+        .build();
+
+    Post post1 = Post.builder()
+        .id(1L)
+        .title("1번째 포스팅 입니다")
+        .content("이런 저런 내용이 담겨있어요")
+        .author(won)
+        .likes(15)
+        .tags("1번")
+        .views(random.nextInt(999))
+        .createdAt(LocalDateTime.now())
+        .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
+        .build();
+
+    Post post2 = Post.builder()
+        .id(2L)
+        .title("2번째 포스팅 입니다")
+        .content("이런 저런 내용이 담겨있어요")
+        .author(won)
+        .likes(20)
+        .tags("2번")
+        .views(random.nextInt(999))
+        .createdAt(LocalDateTime.now())
+        .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
+        .build();
+
+    Post post3 = Post.builder()
+        .id(2L)
+        .title("2번째 포스팅 입니다")
+        .content("이런 저런 내용이 담겨있어요")
+        .author(won)
+        .likes(30)
+        .tags("2번")
+        .views(random.nextInt(999))
+        .createdAt(LocalDateTime.now())
+        .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
+        .build();
+
+    Integer page = 0;
+    Integer size = 20;
+
+    List<Post> posts = Arrays.asList(post3, post2, post1);
+    log.info("posts : {}", posts);
+    given(postController.findAllByLikesInDescendingOrder(page, size)).willReturn(OK(posts));
+
+    //when
+    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+    map.add("page", page.toString());
+    map.add("size", size.toString());
+
+    ResultActions result = this.mockMvc.perform(get("/posts/likes")
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .queryParams(map));
+
+    //then
+    result.andExpect(status().isOk())
+        .andDo(print())
+        .andDo(document("{class-name}/{method-name}",
+            getDocumentRequest(),
+            getDocumentResponse(),
+            requestParameters(
+                parameterWithName("page").description("페이지 넘버"),
+                parameterWithName("size").description("페이지 당 보여줄 포스트 수")
+            ),
+            responseFields(
+                fieldWithPath("success").description("성공 여부").type(JsonFieldType.BOOLEAN),
+                fieldWithPath("error").description("에러 여부(발생 시, 어떠한 에러인지 기재)").type(JsonFieldType.NULL),
+                subsectionWithPath("response").description("응답"),
+                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].title").description("포스트 제목").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].content").description("포스트 내용").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].thumbnail").description("포스트 썸네일").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].author").description("포스트 저자").type(JsonFieldType.OBJECT),
+                fieldWithPath("response.[].views").description("포스트 조회").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].tags").description("포스트 태그").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
             )));
   }
 }
