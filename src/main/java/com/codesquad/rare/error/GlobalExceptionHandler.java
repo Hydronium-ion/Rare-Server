@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -38,6 +39,13 @@ public class GlobalExceptionHandler {
 
     log.error("Unexpected service exception occurred: {}", e.getMessage(), e);
     return newResponse(e, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  //@Validation Exception handler
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<?> handleConstraintViolationException(MethodArgumentNotValidException e) {
+    log.error("MethodArgumentNotValidException occurred: {}", e.getMessage(), e);
+    return newResponse(e, HttpStatus.BAD_REQUEST);
   }
 
 }
