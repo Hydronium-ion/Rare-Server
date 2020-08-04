@@ -23,8 +23,9 @@ public class PostService {
 
   private final AccountRepository accountRepository;
 
-  public List<Post> findAllAndOrderByCreatedAtDesc() {
-    return postRepository.findAllByOrderByCreatedAtDesc();
+  public List<Post> findAllAndOrderByCreatedAtDesc(int page, int size) {
+    PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+    return postRepository.findAllByIsPublicTrue(pageRequest).getContent();
   }
 
   public Post findById(Long postId) {
@@ -50,8 +51,8 @@ public class PostService {
     return post;
   }
 
-  public List<Post> findAllByLikesInDescendingOrder(Integer page, Integer size) {
+  public List<Post> findAllByLikesInDescendingOrder(int page, int size) {
     PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likes").descending());
-    return postRepository.findAll(pageRequest).getContent();
+    return postRepository.findAllByIsPublicTrue(pageRequest).getContent();
   }
 }
