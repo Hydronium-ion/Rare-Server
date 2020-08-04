@@ -47,8 +47,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -65,9 +63,6 @@ class PostControllerTest {
 
   @MockBean
   PostController postController;
-
-  @MockBean
-  PostRepository postRepository;
 
   Random random = new Random();
 
@@ -126,26 +121,23 @@ class PostControllerTest {
 
   @DisplayName("메인 페이지 조회 (생성 시간 기준 내림차순 정렬)")
   @Test
-  void find_all_posts() throws Exception {
+  void find_all_in_latest_order() throws Exception {
 
     //given
     Post post1 = getPost(random, won, 1L, "1번째 포스팅 입니다");
     Post post2 = getPost(random, won, 2L, "2번째 포스팅 입니다");
 
-    Integer page = 0;
-    Integer size = 20;
+    int page = 0;
+    int size = 20;
 
     List<Post> posts = Arrays.asList(post1, post2);
     given(postController.findAllInLatestOrder(page, size)).willReturn(OK(posts));
 
-    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-    map.add("page", page.toString());
-    map.add("size", size.toString());
-
     //when
     ResultActions result = mockMvc.perform(get("/posts/createdAt")
         .contentType(MediaType.APPLICATION_JSON)
-        .queryParams(map));
+        .param("page", String.valueOf(page))
+        .param("size", String.valueOf(size)));
 
     //then
     result.andExpect(status().isOk())
@@ -171,7 +163,8 @@ class PostControllerTest {
                 fieldWithPath("response.[].views").description("포스트 조회").type(JsonFieldType.NUMBER),
                 fieldWithPath("response.[].likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
                 fieldWithPath("response.[].tags").description("포스트 태그").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
+                fieldWithPath("response.[].createdAt").description("포스트 생성 시간")
+                    .type(JsonFieldType.STRING)
             )));
   }
 
@@ -183,21 +176,17 @@ class PostControllerTest {
     Post post2 = getPost(random, won, 2L, "2번째 포스팅 입니다");
     Post post3 = getPost(random, won, 3L, "3번째 포스팅 입니다");
 
-    Integer page = 0;
-    Integer size = 20;
+    int page = 0;
+    int size = 20;
 
     List<Post> posts = Arrays.asList(post3, post2, post1);
     given(postController.findAllByLikesInDescendingOrder(page, size)).willReturn(OK(posts));
 
     //when
-    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-    map.add("page", page.toString());
-    map.add("size", size.toString());
-
     ResultActions result = mockMvc.perform(get("/posts/likes")
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .queryParams(map));
+        .param("page", String.valueOf(page))
+        .param("size", String.valueOf(size)));
 
     //then
     result.andExpect(status().isOk())
@@ -215,23 +204,16 @@ class PostControllerTest {
 
                 subsectionWithPath("response").description("응답"),
 
-                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)")
-                    .type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)").type(JsonFieldType.NUMBER),
                 fieldWithPath("response.[].title").description("포스트 제목").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].subTitle").description("포스트 보조 제목")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].content").description("포스트 내용")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].thumbnail").description("포스트 썸네일")
-                    .type(JsonFieldType.STRING),
-                fieldWithPath("response.[].author").description("포스트 저자")
-                    .type(JsonFieldType.OBJECT),
+                fieldWithPath("response.[].subTitle").description("포스트 보조 제목").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].content").description("포스트 내용").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].thumbnail").description("포스트 썸네일").type(JsonFieldType.STRING),
+                fieldWithPath("response.[].author").description("포스트 저자").type(JsonFieldType.OBJECT),
                 fieldWithPath("response.[].views").description("포스트 조회").type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].likes").description("포스트 좋아요 수")
-                    .type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
                 fieldWithPath("response.[].tags").description("포스트 태그").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].createdAt").description("포스트 생성 시간")
-                    .type(JsonFieldType.STRING)
+                fieldWithPath("response.[].createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
             )));
   }
 
@@ -263,15 +245,19 @@ class PostControllerTest {
                     fieldWithPath("title").description("포스트 제목부 (필수)").type(JsonFieldType.STRING),
                     fieldWithPath("subTitle").description("포스트 제목 (필수)").type(JsonFieldType.STRING),
                     fieldWithPath("content").description("포스트 내용").type(JsonFieldType.STRING),
-                    fieldWithPath("thumbnail").description("포스트 썸네일 이미지").type(JsonFieldType.STRING),
-                    fieldWithPath("authorId").description("포스트 작성자 ID (필수)").type(JsonFieldType.NUMBER),
+                    fieldWithPath("thumbnail").description("포스트 썸네일 이미지")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("authorId").description("포스트 작성자 ID (필수)")
+                        .type(JsonFieldType.NUMBER),
                     fieldWithPath("tags").description("포스트 태그").type(JsonFieldType.STRING),
-                    fieldWithPath("isPublic").description("포스트 공개 여부 (필수)").type(JsonFieldType.BOOLEAN)
+                    fieldWithPath("isPublic").description("포스트 공개 여부 (필수)")
+                        .type(JsonFieldType.BOOLEAN)
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 유무").type(JsonFieldType.BOOLEAN),
                     fieldWithPath("response").description("응답").type(JsonFieldType.OBJECT),
-                    fieldWithPath("response.postId").description("생성된 포스트 ID").type(JsonFieldType.NUMBER),
+                    fieldWithPath("response.postId").description("생성된 포스트 ID")
+                        .type(JsonFieldType.NUMBER),
                     fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL)
                 )
             ));
@@ -333,15 +319,18 @@ class PostControllerTest {
                 fieldWithPath("success").description("성공 여부").type(JsonFieldType.BOOLEAN),
                 fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL),
                 subsectionWithPath("response").description("응답"),
-                fieldWithPath("response.id").description("포스트 ID 번호(고유한 값)").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.id").description("포스트 ID 번호(고유한 값)")
+                    .type(JsonFieldType.NUMBER),
                 fieldWithPath("response.title").description("포스트 제목").type(JsonFieldType.STRING),
                 fieldWithPath("response.content").description("포스트 내용").type(JsonFieldType.STRING),
-                fieldWithPath("response.thumbnail").description("포스트 썸네일").type(JsonFieldType.STRING),
+                fieldWithPath("response.thumbnail").description("포스트 썸네일")
+                    .type(JsonFieldType.STRING),
                 fieldWithPath("response.author").description("포스트 저자").type(JsonFieldType.OBJECT),
                 fieldWithPath("response.views").description("포스트 조회").type(JsonFieldType.NUMBER),
                 fieldWithPath("response.likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
                 fieldWithPath("response.tags").description("포스트 태그").type(JsonFieldType.STRING),
-                fieldWithPath("response.createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
+                fieldWithPath("response.createdAt").description("포스트 생성 시간")
+                    .type(JsonFieldType.STRING)
             )));
   }
 }
