@@ -1,5 +1,6 @@
 package com.codesquad.rare.domain.account;
 
+import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import org.springframework.http.ResponseEntity;
 
 @Getter
 @Builder
@@ -30,11 +31,11 @@ public class Account {
 
   private String avatarUrl;
 
-  public static Account toEntity(AccountCreateRequest accountCreateRequest) {
+  public static Account toEntity(ResponseEntity<Map> resultMap) {
     return Account.builder()
-        .email(accountCreateRequest.getEmail())
-        .name(accountCreateRequest.getName())
-        .avatarUrl(accountCreateRequest.getAvatarUrl())
+        .email(resultMap.getBody().get("email").toString())
+        .name(resultMap.getBody().get("name").toString())
+        .avatarUrl(resultMap.getBody().get("avatar_url").toString())
         .build();
   }
 }

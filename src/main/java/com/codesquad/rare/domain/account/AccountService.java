@@ -12,12 +12,4 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
   private final AccountRepository accountRepository;
-
-  public AccountCreateResponse create(AccountCreateRequest accountCreateRequest) {
-
-    Account savedAccount = accountRepository.save(Account.toEntity(accountCreateRequest));
-    AccountCreateResponse accountCreateResponse = new AccountCreateResponse();
-
-    return accountCreateResponse;
-  }
 }
