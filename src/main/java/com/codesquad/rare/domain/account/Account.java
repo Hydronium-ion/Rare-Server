@@ -26,5 +26,15 @@ public class Account {
 
   private String name;
 
+  private String email;
+
   private String avatarUrl;
+
+  public static Account toEntity(AccountCreateRequest accountCreateRequest) {
+    return Account.builder()
+        .email(accountCreateRequest.getEmail())
+        .name(accountCreateRequest.getName())
+        .avatarUrl(accountCreateRequest.getAvatarUrl())
+        .build();
+  }
 }
