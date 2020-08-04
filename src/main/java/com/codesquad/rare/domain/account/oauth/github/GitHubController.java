@@ -16,7 +16,7 @@ public class GitHubController {
 
   @GetMapping("/login/oauth")
   public void login(
-      @PathParam("code") @Valid String code, HttpServletResponse response) throws IOException {
+      @PathParam("code") @Valid String code, HttpServletResponse response) throws IOException, Exception {
     gitHubService.login(code, response);
   }
 }

@@ -5,6 +5,7 @@ import com.codesquad.rare.domain.account.AccountRepository;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javassist.bytecode.DuplicateMemberException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,20 +36,22 @@ public class GitHubService {
   @Value("${github.client_secret}")
   private String clientSecret;
 
-  public void login(String code, HttpServletResponse response) throws IOException {
+  public void login(String code, HttpServletResponse response) throws IOException, Exception {
 
     String redirectUrl = "http://localhost:8080/posts/likes";
 
     GitHubAccessToken gitHubAccessToken = getAccessToken(code);
     log.info("##### Access Token {}, {}", gitHubAccessToken.getTokenType(),
         gitHubAccessToken.getAccessToken());
-    this.saveUser(gitHubAccessToken.getAccessToken());
+
+    ResponseEntity<Map> resultMap = this.getResultMap(gitHubAccessToken.getAccessToken());
+
+    this.createAccount(resultMap);
     // redirection 이후 예상 과정
     // 1. 환영합니다 (환영합니다 페이지 만들어야 함) -> 일부로 유저에게 한 번 더 로그인을 하게 만듦
     // 2. 바로 메인 페이지 (로그인이 된 상태로 메인 페이지 이동) -> 회원가입 이후 로그인하는 귀찮은 과정 생략시킴
     // JWT를 헤더에 담아 클라이언트단에 보낸다. -> 클라이언트 단은 JWT를 디코드해서 유저 정보 사용
     response.sendRedirect(redirectUrl);
-
   }
 
   public GitHubAccessToken getAccessToken(String code) {
@@ -73,9 +76,7 @@ public class GitHubService {
     return (GitHubAccessToken) response.getBody();
   }
 
-  @Transactional
-  public void saveUser(String accessToken) {
-
+  public ResponseEntity<Map> getResultMap(String accessToken) {
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders header = new HttpHeaders();
     HttpEntity<?> entity = new HttpEntity<>(header);
@@ -84,14 +85,24 @@ public class GitHubService {
         .fromHttpUrl("https://api.github.com/user?access_token=" + accessToken).build();
 
     try {
-      ResponseEntity<Map> resultMap =
-          restTemplate.exchange(sendAccessTokenUrl.toString(), HttpMethod.GET, entity, Map.class);
-      Account account = Account.toEntity(resultMap);
-      accountRepository.save(account);
+      return restTemplate.exchange(sendAccessTokenUrl.toString(), HttpMethod.GET, entity, Map.class);
     } catch (HttpClientErrorException | HttpServerErrorException e) {
       log.info("##### HttpErrorException: {}", e.getMessage());
     } catch (Exception e) {
       log.info("##### Exception: {}", e.getMessage());
     }
+    return null;
+  }
+
+  @Transactional
+  public void createAccount(ResponseEntity<Map> resultMap) {
+
+    Account account = Account.toEntity(resultMap);
+
+    if (!(accountRepository.findAccountByEmail(account.getEmail()) == null)) {
+      return;
+    }
+
+    accountRepository.save(account);
   }
 }
