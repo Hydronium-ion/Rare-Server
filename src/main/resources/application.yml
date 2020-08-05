@@ -46,9 +46,9 @@ spring:
   profiles: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rare-rds.ct12sp1kygt2.ap-northeast-2.rds.amazonaws.com/rare?characterEncoding=UTF-8
-    username: rare
-    password: rare
+    url: ENC(Gdhp2/wE8wUwNlkBr9qRkOTPG6jW8OBDlepXQS6R5MQmT9ewWtACNtPysA4qSm32swf7ykPJ9K6gYwxqy1+bvPMmewru8GPHuCbLlCnGKT+WGiS4g9gEEljGosv0dK324NrjKKxKwtMzA7zmw+Yc4A==)
+    username: ENC(J1VBtco06NCde7YPnUuwCg==)
+    password: ENC(7ByjfO859rK9z4QpQvEpFA==)
   jpa:
     database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
     open-in-view: false
