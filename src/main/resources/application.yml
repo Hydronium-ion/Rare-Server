@@ -8,9 +8,9 @@ spring:
   profiles: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rare
-    username: root
-    password: rare
+    url: ENC(gcvhT3zb7WQzRPsMHN0dlmiJV+5RXbCIR9lUf8cZwPdlyR0iGI8XkKLFrsy0YOL9)
+    username: ENC(2Z7MIWGU6TDEvJkwgNGtCA==)
+    password: ENC(gUMaagaXHF5bTmzJjeeebg==)
   jpa:
     database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
     open-in-view: true
