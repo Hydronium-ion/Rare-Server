@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: ENC(Hv3xrg1jYFuWDz7ZOP5YjzaN4A1ZXiainI5qytyzCEs=)
+    url: ENC(ErHIlvg1tzffKbqL0jM+Ie1PnUT2krmPg6iKuuCxuuejMYLruxZ731k4xKCzKQv0pla4DoBYyKc=)
     username: ENC(wlXlYbgLDLRbZVC3GyHC4g==)
     password:
   jpa:
