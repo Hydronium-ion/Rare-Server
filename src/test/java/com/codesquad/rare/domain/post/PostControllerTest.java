@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -222,7 +223,8 @@ class PostControllerTest {
 
     PostCreateResponse response = new PostCreateResponse();
     response.setPostId(1L);
-    given(postController.create(any())).willReturn(OK(response));
+    given(postController.create(any(PostCreateRequest.class))).willReturn(OK(response));
+
 
     //when
     ResultActions result = mockMvc.perform(post("/posts")
