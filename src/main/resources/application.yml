@@ -40,6 +40,10 @@ management:
     health:
       show-details: always
 
+github:
+  client_id: ENC(tbgEYfiwQ2FQeLA4hIf0uunSHd7QU4k4ZIGNnEPS+EY=)
+  client_secret: ENC(n7ubeazhKV+G1sqvtjqBLHOTInetTvHHnKsbNhmbblXoDN60jIHynvqIOqYZv1gcHozrIJHLH60=)
+
 ---
 # spring, datasource
 spring:
