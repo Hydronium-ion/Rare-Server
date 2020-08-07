@@ -1,4 +1,4 @@
-version: 0.0
+iversion: 0.0
 os: linux
 
 files:
@@ -13,7 +13,11 @@ permissions:
     mode: 755
 
 hooks:
-  AfterInstall:
-    - location: deploy.sh
-      timeout: 60
+  ApplicationStop:
+    - location: scripts/server_stop.sh
+      timeout: 20
+      runas: root
+  ApplicationStart:
+    - location: scripts/server_start.sh
+      timeout: 20
       runas: root
