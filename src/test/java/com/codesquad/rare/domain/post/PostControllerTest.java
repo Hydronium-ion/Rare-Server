@@ -222,7 +222,8 @@ class PostControllerTest {
 
     PostCreateResponse response = new PostCreateResponse();
     response.setPostId(1L);
-    given(postController.create(any())).willReturn(OK(response));
+    given(postController.create(any(PostCreateRequest.class))).willReturn(OK(response));
+
 
     //when
     ResultActions result = mockMvc.perform(post("/posts")
