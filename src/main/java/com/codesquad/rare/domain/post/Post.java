@@ -2,6 +2,7 @@ package com.codesquad.rare.domain.post;
 
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import lombok.NoArgsConstructor;
 @JsonPropertyOrder({
     "id",
     "title",
+    "subTitle",
     "content",
     "thumbnail",
     "author",
@@ -44,6 +46,8 @@ public class Post {
   @Column(length = 100)
   private String title;
 
+  private String subTitle;
+
   @Lob
   private String content;
 
@@ -60,11 +64,15 @@ public class Post {
 
   private String tags;
 
+  @JsonIgnore
+  private Boolean isPublic;
+
   private LocalDateTime createdAt;
 
   public static Post toEntity(PostCreateRequest postCreateRequest, Account author) {
     return Post.builder()
         .title(postCreateRequest.getTitle())
+        .subTitle(postCreateRequest.getSubTitle())
         .content(postCreateRequest.getContent())
         .thumbnail(postCreateRequest.getThumbnail())
         .author(author)
@@ -72,6 +80,7 @@ public class Post {
         .likes(0)
         .tags(postCreateRequest.getTags())
         .createdAt(LocalDateTime.now())
+        .isPublic(postCreateRequest.getIsPublic())
         .build();
   }
 }
