@@ -43,7 +43,7 @@ management:
 github:
   client_id: ENC(tbgEYfiwQ2FQeLA4hIf0uunSHd7QU4k4ZIGNnEPS+EY=)
   client_secret: ENC(n7ubeazhKV+G1sqvtjqBLHOTInetTvHHnKsbNhmbblXoDN60jIHynvqIOqYZv1gcHozrIJHLH60=)
-
+  redirection_url: http://localhost:8080/posts/likes
 ---
 # spring, datasource
 spring:
@@ -79,3 +79,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+github:
+  client_id: ENC(FLewD5Nab/PM13ZLoCEAZ3XQAizll35gOsCcBLCd2Rg=)
+  client_secret: ENC(7uB7/fw4sKkPS9tYzNmmh1481N41a+lHSDP08NAe8Bclsu9cQ6WLeY2gA3aSWZ1eSyGDdf4Z5lw=)
+  redirection_url: http://http://3.34.117.237/api/posts/likes

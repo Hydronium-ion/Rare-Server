@@ -35,10 +35,10 @@ public class GitHubService {
   private String clientId;
   @Value("${github.client_secret}")
   private String clientSecret;
+  @Value("${github.redirection_url}")
+  private String redirectionUrl;
 
   public void create(String code, HttpServletResponse response) throws IOException, Exception {
-
-    String redirectUrl = "http://localhost:8080/posts/likes";
 
     GitHubAccessToken gitHubAccessToken = getAccessToken(code);
     log.info("##### Access Token {}, {}", gitHubAccessToken.getTokenType(),
@@ -51,11 +51,11 @@ public class GitHubService {
     // 1. 환영합니다 (환영합니다 페이지 만들어야 함) -> 일부로 유저에게 한 번 더 로그인을 하게 만듦
     // 2. 바로 메인 페이지 (로그인이 된 상태로 메인 페이지 이동) -> 회원가입 이후 로그인하는 귀찮은 과정 생략시킴
     // JWT를 헤더에 담아 클라이언트단에 보낸다. -> 클라이언트 단은 JWT를 디코드해서 유저 정보 사용
-    response.sendRedirect(redirectUrl);
+    response.sendRedirect(redirectionUrl);
   }
 
   public GitHubAccessToken getAccessToken(String code) {
-
+    log.info("##### local: {}, {}, {}", redirectionUrl, clientId, clientSecret);
     String URL = "https://github.com/login/oauth/access_token";
 
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
