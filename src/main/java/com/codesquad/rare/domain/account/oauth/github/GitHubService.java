@@ -36,7 +36,7 @@ public class GitHubService {
   @Value("${github.client_secret}")
   private String clientSecret;
 
-  public void login(String code, HttpServletResponse response) throws IOException, Exception {
+  public void create(String code, HttpServletResponse response) throws IOException, Exception {
 
     String redirectUrl = "http://localhost:8080/posts/likes";
 

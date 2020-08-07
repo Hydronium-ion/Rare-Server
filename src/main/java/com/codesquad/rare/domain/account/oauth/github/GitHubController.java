@@ -15,8 +15,8 @@ public class GitHubController {
   private final GitHubService gitHubService;
 
   @GetMapping("/login/oauth")
-  public void login(
+  public void create(
       @PathParam("code") @Valid String code, HttpServletResponse response) throws IOException, Exception {
-    gitHubService.login(code, response);
+    gitHubService.create(code, response);
   }
 }
