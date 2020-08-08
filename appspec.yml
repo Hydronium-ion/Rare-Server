@@ -13,6 +13,8 @@ permissions:
     mode: 755
 
 hooks:
+  BeforeInstall:
+    - location: beforeInstall.sh
   AfterInstall:
     - location: deploy.sh
       timeout: 60
