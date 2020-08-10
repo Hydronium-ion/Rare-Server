@@ -56,17 +56,17 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @AutoConfigureRestDocs
 class PostControllerTest {
 
-  final Logger log = LoggerFactory.getLogger(PostControllerTest.class);
+  private final Logger log = LoggerFactory.getLogger(PostControllerTest.class);
 
   @Autowired
-  MockMvc mockMvc;
+  private MockMvc mockMvc;
 
   @MockBean
-  PostController postController;
+  private PostController postController;
 
-  Random random = new Random();
+  private Random random = new Random();
 
-  Account won = Account.builder()
+  private Account won = Account.builder()
       .id(1L)
       .name("won")
       .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
@@ -74,7 +74,7 @@ class PostControllerTest {
 
 
   @BeforeEach
-  void set_up(WebApplicationContext webApplicationContext,
+  void setUp(WebApplicationContext webApplicationContext,
       RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
@@ -131,10 +131,10 @@ class PostControllerTest {
     int size = 20;
 
     List<Post> posts = Arrays.asList(post1, post2);
-    given(postController.findAllInLatestOrder(page, size)).willReturn(OK(posts));
+    given(postController.findAllByCreatedAt(page, size)).willReturn(OK(posts));
 
     //when
-    ResultActions result = mockMvc.perform(get("/posts/createdAt")
+    ResultActions result = mockMvc.perform(get("/posts/recent")
         .contentType(MediaType.APPLICATION_JSON)
         .param("page", String.valueOf(page))
         .param("size", String.valueOf(size)));
@@ -179,10 +179,10 @@ class PostControllerTest {
     int size = 20;
 
     List<Post> posts = Arrays.asList(post3, post2, post1);
-    given(postController.findAllByLikesInDescendingOrder(page, size)).willReturn(OK(posts));
+    given(postController.findAllByLikes(page, size)).willReturn(OK(posts));
 
     //when
-    ResultActions result = mockMvc.perform(get("/posts/likes")
+    ResultActions result = mockMvc.perform(get("/posts")
         .contentType(MediaType.APPLICATION_JSON)
         .param("page", String.valueOf(page))
         .param("size", String.valueOf(size)));

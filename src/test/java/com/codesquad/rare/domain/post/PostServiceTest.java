@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 class PostServiceTest {
 
-  final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
+  private final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
 
   @MockBean
   private PostRepository postRepository;
