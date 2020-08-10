@@ -97,3 +97,23 @@ include::{snippets}/post-controller-test/delete_post/http-response.adoc[]
 ==== Response Fields
 
 include::{snippets}/post-controller-test/delete_post/response-fields.adoc[]
+
+== User
+
+=== 유저 삭제
+
+==== Path Parameters
+
+include::{snippets}/account-controller-test/delete_account/path-parameters.adoc[]
+
+==== Request
+
+include::{snippets}/account-controller-test/delete_account/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/account-controller-test/delete_account/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/account-controller-test/delete_account/response-fields.adoc[]
