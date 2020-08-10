@@ -14,15 +14,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonPropertyOrder({
     "id",
     "title",
@@ -68,6 +66,21 @@ public class Post {
   private Boolean isPublic;
 
   private LocalDateTime createdAt;
+
+  @Builder
+  private Post(String title, String subTitle, String content, String thumbnail, Account author,
+      int views, int likes, String tags, boolean isPublic, LocalDateTime createdAt) {
+    this.title = title;
+    this.subTitle = subTitle;
+    this.content = content;
+    this.thumbnail = thumbnail;
+    this.author = author;
+    this.views = views;
+    this.likes = likes;
+    this.tags = tags;
+    this.isPublic = isPublic;
+    this.createdAt = createdAt;
+  }
 
   public static Post of(PostCreateRequest postCreateRequest, Account author) {
     return Post.builder()
