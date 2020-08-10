@@ -1,8 +1,11 @@
 package com.codesquad.rare.domain.post;
 
 import static com.codesquad.rare.common.api.ApiResult.OK;
+import static com.codesquad.rare.config.Condition.CREATED;
+import static com.codesquad.rare.config.Condition.LIKE;
 
 import com.codesquad.rare.common.api.ApiResult;
+import com.codesquad.rare.config.Condition;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.codesquad.rare.domain.post.response.PostCreateResponse;
 import java.util.List;
@@ -28,20 +31,18 @@ public class PostController {
   private static final String DEFAULT_PAGE = "0";
   private static final String DEFAULT_SIZE = "20";
 
-  //생성시간 순으로 내림차순 정렬
-  @GetMapping("createdAt")
-  public ApiResult<List<Post>> findAllInLatestOrder(
+  @GetMapping
+  public ApiResult<List<Post>> findAllByLikes(
       @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE) int page,
       @RequestParam(value = "size", required = false, defaultValue = DEFAULT_SIZE) int size) {
-    return OK(postService.findAllAndOrderByCreatedAtDesc(page, size));
+    return OK(postService.findAll(LIKE.getName(), page, size));
   }
 
-  // 좋아요 순으로 내림차순 정렬
-  @GetMapping("likes")
-  public ApiResult<List<Post>> findAllByLikesInDescendingOrder(
+  @GetMapping("/recent")
+  public ApiResult<List<Post>> findAllByCreatedAt(
       @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE) int page,
       @RequestParam(value = "size", required = false, defaultValue = DEFAULT_SIZE) int size) {
-    return OK(postService.findAllByLikesInDescendingOrder(page, size));
+    return OK(postService.findAll(CREATED.getName(), page, size));
   }
 
   @GetMapping("{id}")

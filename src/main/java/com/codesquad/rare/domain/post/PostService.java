@@ -23,8 +23,8 @@ public class PostService {
 
   private final AccountRepository accountRepository;
 
-  public List<Post> findAllAndOrderByCreatedAtDesc(int page, int size) {
-    PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+  public List<Post> findAll(String condition, int page, int size) {
+    PageRequest pageRequest = PageRequest.of(page, size, Sort.by(condition).descending());
     return postRepository.findAllByIsPublicTrue(pageRequest).getContent();
   }
 
@@ -48,10 +48,5 @@ public class PostService {
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     postRepository.delete(post);
     return post;
-  }
-
-  public List<Post> findAllByLikesInDescendingOrder(int page, int size) {
-    PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likes").descending());
-    return postRepository.findAllByIsPublicTrue(pageRequest).getContent();
   }
 }
