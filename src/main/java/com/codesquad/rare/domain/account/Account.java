@@ -6,16 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Account {
 
@@ -27,4 +23,10 @@ public class Account {
   private String name;
 
   private String avatarUrl;
+
+  @Builder
+  private Account(String name, String avatarUrl) {
+    this.name = name;
+    this.avatarUrl = avatarUrl;
+  }
 }
