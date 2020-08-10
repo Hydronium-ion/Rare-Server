@@ -37,7 +37,7 @@ public class PostService {
   public PostCreateResponse save(PostCreateRequest postCreateRequest) {
     Account author = accountRepository.findById(postCreateRequest.getAuthorId())
         .orElseThrow(() -> new NotFoundException(Account.class, postCreateRequest.getAuthorId()));
-    Post savedPost = postRepository.save(Post.toEntity(postCreateRequest, author));
+    Post savedPost = postRepository.save(Post.ofRequestAndAccount(postCreateRequest, author));
     PostCreateResponse response = new PostCreateResponse();
     response.setPostId(savedPost.getId());
     return response;
