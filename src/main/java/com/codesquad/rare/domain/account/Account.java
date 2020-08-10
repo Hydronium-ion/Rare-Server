@@ -1,11 +1,15 @@
 package com.codesquad.rare.domain.account;
 
+import com.codesquad.rare.domain.post.Post;
+import java.util.List;
 import java.util.Map;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +34,9 @@ public class Account {
   private String email;
 
   private String avatarUrl;
+
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Post> posts;
 
   public static Account toEntity(ResponseEntity<Map> resultMap) {
     return Account.builder()
