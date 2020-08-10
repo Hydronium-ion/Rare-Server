@@ -2,6 +2,7 @@ package com.codesquad.rare.domain.post;
 
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
@@ -55,6 +56,7 @@ public class Post {
   @Lob
   private String thumbnail;
 
+  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "account_id")
   private Account author;

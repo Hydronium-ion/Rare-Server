@@ -1,6 +1,7 @@
 package com.codesquad.rare.domain.account;
 
 import com.codesquad.rare.domain.post.Post;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class Account {
 
   private String avatarUrl;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
   private List<Post> posts = new ArrayList<>();
 
