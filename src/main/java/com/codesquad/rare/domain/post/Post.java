@@ -55,7 +55,7 @@ public class Post {
   @Lob
   private String thumbnail;
 
-  @ManyToOne(cascade = CascadeType.REMOVE)
+  @ManyToOne
   @JoinColumn(name = "account_id")
   private Account author;
 
