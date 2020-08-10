@@ -47,5 +47,4 @@ public class GlobalExceptionHandler {
     log.error("MethodArgumentNotValidException occurred: {}", e.getMessage(), e);
     return newResponse(e, HttpStatus.BAD_REQUEST);
   }
-
 }
