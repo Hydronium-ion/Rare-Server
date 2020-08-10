@@ -37,6 +37,7 @@ public class Account {
 
   private String avatarUrl;
 
+  @Builder.Default
   @JsonManagedReference
   @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
   private List<Post> posts = new ArrayList<>();
