@@ -69,7 +69,7 @@ public class Post {
 
   private LocalDateTime createdAt;
 
-  public static Post ofRequestAndAccount(PostCreateRequest postCreateRequest, Account author) {
+  public static Post of(PostCreateRequest postCreateRequest, Account author) {
     return Post.builder()
         .title(postCreateRequest.getTitle())
         .subTitle(postCreateRequest.getSubTitle())
