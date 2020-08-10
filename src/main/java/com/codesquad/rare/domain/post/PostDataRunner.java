@@ -78,6 +78,7 @@ public class PostDataRunner implements ApplicationRunner {
 
     Account won = Account.builder()
         .name("won")
+        .email("junothyme@gmail.com")
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
 

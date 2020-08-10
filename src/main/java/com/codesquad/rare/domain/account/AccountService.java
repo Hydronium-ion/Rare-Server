@@ -14,12 +14,11 @@ public class AccountService {
 
   private final AccountRepository accountRepository;
 
-  public AccountDeleteResponse delete(AccountDeleteRequest request) {
-    Account account = accountRepository.findById(request.getAccountId())
-        .orElseThrow(() -> new NotFoundException(Account.class, request.getAccountId()));
-    accountRepository.deleteById(request.getAccountId());
-    AccountDeleteResponse response = new AccountDeleteResponse();
-    response.setAccountId(request.getAccountId());
-    return response;
+  @Transactional
+  public AccountDeleteResponse delete(Long accountId) {
+    Account account = accountRepository.findById(accountId).orElseThrow(
+        () -> new NotFoundException(Account.class, accountId));
+    accountRepository.delete(account);
+    return new AccountDeleteResponse(accountId);
   }
 }
