@@ -1,4 +1,4 @@
-package com.codesquad.rare.config;
+package com.codesquad.rare.domain.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

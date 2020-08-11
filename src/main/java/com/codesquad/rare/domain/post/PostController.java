@@ -1,11 +1,10 @@
 package com.codesquad.rare.domain.post;
 
 import static com.codesquad.rare.common.api.ApiResult.OK;
-import static com.codesquad.rare.config.Condition.CREATED;
-import static com.codesquad.rare.config.Condition.LIKE;
+import static com.codesquad.rare.domain.post.Condition.CREATED;
+import static com.codesquad.rare.domain.post.Condition.LIKE;
 
 import com.codesquad.rare.common.api.ApiResult;
-import com.codesquad.rare.config.Condition;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.codesquad.rare.domain.post.response.PostCreateResponse;
 import java.util.List;
