@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonPropertyOrder({
     "id",
@@ -68,8 +67,9 @@ public class Post {
   private LocalDateTime createdAt;
 
   @Builder
-  private Post(String title, String subTitle, String content, String thumbnail, Account author,
-      int views, int likes, String tags, boolean isPublic, LocalDateTime createdAt) {
+  private Post(Long id, String title, String subTitle, String content, String thumbnail,
+      Account author, int views, int likes, String tags, boolean isPublic, LocalDateTime createdAt) {
+    this.id = id;
     this.title = title;
     this.subTitle = subTitle;
     this.content = content;
