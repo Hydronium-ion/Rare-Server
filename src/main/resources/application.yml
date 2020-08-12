@@ -44,7 +44,6 @@ management:
 github:
   client_id: ${GITHUB_CLIENT_ID}
   client_secret: ${GITHUB_CLIENT_SECRET}
-  redirection_url: http://localhost:8080/posts/likes
 ---
 # spring, datasource
 spring:
@@ -84,4 +83,3 @@ management:
 github:
   client_id: ${GITHUB_CLIENT_ID}
   client_secret: ${GITHUB_CLIENT_SCERET}
-  redirection_url: http://54.159.94.50/api/posts/likes
