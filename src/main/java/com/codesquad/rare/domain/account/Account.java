@@ -1,30 +1,22 @@
 package com.codesquad.rare.domain.account;
 
-import com.codesquad.rare.domain.post.Post;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import java.util.ArrayList;
-import java.util.List;
+import com.codesquad.rare.common.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Map;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
-@Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor
 @Entity
-public class Account {
+@Getter
+@NoArgsConstructor
+public class Account extends BaseTimeEntity {
 
   @Id
   @Column(name = "account_id")
@@ -37,16 +29,22 @@ public class Account {
 
   private String avatarUrl;
 
-  @Builder.Default
-  @JsonManagedReference
-  @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-  private List<Post> posts = new ArrayList<>();
+  private boolean isDelete;
 
-  public static Account toEntity(ResponseEntity<Map> resultMap) {
+  @Builder
+  public Account(final String name, final String email, final String avatarUrl, final boolean isDelete) {
+    this.name = name;
+    this.email = email;
+    this.avatarUrl = avatarUrl;
+    this.isDelete = isDelete;
+  }
+
+  public static Account from(ResponseEntity<Map> AccountCreateMap) {
     return Account.builder()
-        .email(resultMap.getBody().get("email").toString())
-        .name(resultMap.getBody().get("name").toString())
-        .avatarUrl(resultMap.getBody().get("avatar_url").toString())
+        .email(AccountCreateMap.getBody().get("email").toString())
+        .name(AccountCreateMap.getBody().get("name").toString())
+        .avatarUrl(AccountCreateMap.getBody().get("avatar_url").toString())
+        .isDelete(true)
         .build();
   }
 }
