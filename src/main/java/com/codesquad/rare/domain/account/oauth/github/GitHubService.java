@@ -1,13 +1,11 @@
 package com.codesquad.rare.domain.account.oauth.github;
 
+import com.codesquad.rare.config.JwtService;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javassist.bytecode.DuplicateMemberException;
 import javax.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -25,37 +23,38 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class GitHubService {
 
   private final AccountRepository accountRepository;
+  private final JwtService jwtService;
 
   @Value("${github.client_id}")
   private String clientId;
   @Value("${github.client_secret}")
   private String clientSecret;
-  @Value("${github.redirection_url}")
-  private String redirectionUrl;
 
-  public void create(String code, HttpServletResponse response) throws IOException, Exception {
+  public GitHubService(AccountRepository accountRepository,
+      JwtService jwtService) {
+    this.accountRepository = accountRepository;
+    this.jwtService = jwtService;
+  }
+
+  public String create(String code, HttpServletResponse response) throws Exception {
 
     GitHubAccessToken gitHubAccessToken = getAccessToken(code);
     log.info("##### Access Token {}, {}", gitHubAccessToken.getTokenType(),
         gitHubAccessToken.getAccessToken());
 
     ResponseEntity<Map> resultMap = this.getResultMap(gitHubAccessToken.getAccessToken());
+    Account account = Account.from(resultMap);
+    this.createAccount(account);
 
-    this.createAccount(resultMap);
-    // redirection 이후 예상 과정
-    // 1. 환영합니다 (환영합니다 페이지 만들어야 함) -> 일부로 유저에게 한 번 더 로그인을 하게 만듦
-    // 2. 바로 메인 페이지 (로그인이 된 상태로 메인 페이지 이동) -> 회원가입 이후 로그인하는 귀찮은 과정 생략시킴
-    // JWT를 헤더에 담아 클라이언트단에 보낸다. -> 클라이언트 단은 JWT를 디코드해서 유저 정보 사용
-    response.sendRedirect(redirectionUrl);
+    return jwtService.makeJwt(account);
   }
 
   public GitHubAccessToken getAccessToken(String code) {
-    log.info("##### local: {}, {}, {}", redirectionUrl, clientId, clientSecret);
+    log.info("##### local:  {}, {}", clientId, clientSecret);
     String URL = "https://github.com/login/oauth/access_token";
 
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -85,7 +84,8 @@ public class GitHubService {
         .fromHttpUrl("https://api.github.com/user?access_token=" + accessToken).build();
 
     try {
-      return restTemplate.exchange(sendAccessTokenUrl.toString(), HttpMethod.GET, entity, Map.class);
+      return restTemplate
+          .exchange(sendAccessTokenUrl.toString(), HttpMethod.GET, entity, Map.class);
     } catch (HttpClientErrorException | HttpServerErrorException e) {
       log.info("##### HttpErrorException: {}", e.getMessage());
     } catch (Exception e) {
@@ -95,14 +95,9 @@ public class GitHubService {
   }
 
   @Transactional
-  public void createAccount(ResponseEntity<Map> resultMap) {
-
-    Account account = Account.from(resultMap);
-
-    if (!(accountRepository.findAccountByEmail(account.getEmail()) == null)) {
-      return;
+  public void createAccount(Account account) {
+    if ((accountRepository.findAccountByEmail(account.getEmail()) == null)) {
+      accountRepository.save(account);
     }
-
-    accountRepository.save(account);
   }
 }
