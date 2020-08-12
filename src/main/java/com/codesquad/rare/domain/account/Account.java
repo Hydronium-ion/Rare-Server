@@ -1,7 +1,6 @@
 package com.codesquad.rare.domain.account;
 
 import com.codesquad.rare.common.BaseTimeEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
