@@ -52,7 +52,6 @@ class AccountControllerTest {
   Random random = new Random();
 
   Account won = Account.builder()
-      .id(1L)
       .name("won")
       .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
       .build();
@@ -64,33 +63,5 @@ class AccountControllerTest {
         .apply(documentationConfiguration(restDocumentation))
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
-  }
-
-  @DisplayName("유저 삭제")
-  @Test
-  public void delete_account() throws Exception {
-    //given
-    given(accountController.delete(1L)).willReturn(OK(new AccountDeleteResponse(1L)));
-
-    //when
-    ResultActions result = this.mockMvc.perform(delete("/users/{id}", 1)
-        .contentType(MediaType.APPLICATION_JSON));
-
-    //then
-    result.andExpect(status().isOk())
-        .andDo(print())
-        .andDo(document("{class-name}/{method-name}",
-            getDocumentRequest(),
-            getDocumentResponse(),
-            pathParameters(
-                parameterWithName("id").description("유저 ID")
-            ),
-            responseFields(
-                fieldWithPath("success").description("성공 유무").type(JsonFieldType.BOOLEAN),
-                fieldWithPath("response").description("응답").type(JsonFieldType.OBJECT),
-                fieldWithPath("response.accountId").description("유저 ID").type(JsonFieldType.NUMBER),
-                fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL)
-            )
-        ));
   }
 }

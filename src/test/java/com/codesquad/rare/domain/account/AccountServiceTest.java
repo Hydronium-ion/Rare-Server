@@ -2,10 +2,12 @@ package com.codesquad.rare.domain.account;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.codesquad.rare.domain.account.oauth.github.GitHubService;
 import com.codesquad.rare.error.exeception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +29,7 @@ public class AccountServiceTest {
   @MockBean
   AccountService accountService;
 
-  @DisplayName("유저 삭제 테스트")
-  @Transactional
-  @Sql("/user-sample-data.sql")
-  @Test
-  public void delete_account() throws Exception {
-    //given
-    Account account = accountRepository.findById(1L)
-        .orElseThrow(() -> new NotFoundException(Account.class, 1L));
-    //when
-    accountRepository.delete(account);
-
-    assertThrows(NotFoundException.class, () -> accountRepository.findById(1L)
-        .orElseThrow(() -> new NotFoundException(Account.class, 1L)));
-  }
+  @MockBean
+  GitHubService gitHubService;
+  
 }
