@@ -13,12 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class JwtService {
+
+  private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
   public static final Integer EXPIRE_TIME = 1000 * 60 * 500;
   private String secretKey = "ThisIsRareServiceSecretKey";

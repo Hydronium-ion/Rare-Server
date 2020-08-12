@@ -31,5 +31,5 @@ public class AccountServiceTest {
 
   @MockBean
   GitHubService gitHubService;
-  
+
 }
