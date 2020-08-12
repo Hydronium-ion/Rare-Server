@@ -1,6 +1,5 @@
 package com.codesquad.rare.domain.account;
 
-import com.codesquad.rare.common.BaseTimeEntity;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Account extends BaseTimeEntity {
+public class Account {
 
   @Id
   @Column(name = "account_id")
@@ -28,14 +27,11 @@ public class Account extends BaseTimeEntity {
 
   private String avatarUrl;
 
-  private boolean isDelete;
-
   @Builder
-  public Account(final String name, final String email, final String avatarUrl, final boolean isDelete) {
+  public Account(final String name, final String email, final String avatarUrl) {
     this.name = name;
     this.email = email;
     this.avatarUrl = avatarUrl;
-    this.isDelete = isDelete;
   }
 
   public static Account from(ResponseEntity<Map> AccountCreateMap) {
@@ -43,7 +39,6 @@ public class Account extends BaseTimeEntity {
         .email(AccountCreateMap.getBody().get("email").toString())
         .name(AccountCreateMap.getBody().get("name").toString())
         .avatarUrl(AccountCreateMap.getBody().get("avatar_url").toString())
-        .isDelete(true)
         .build();
   }
 }

@@ -97,7 +97,7 @@ public class GitHubService {
   @Transactional
   public void createAccount(ResponseEntity<Map> resultMap) {
 
-    Account account = Account.toEntity(resultMap);
+    Account account = Account.from(resultMap);
 
     if (!(accountRepository.findAccountByEmail(account.getEmail()) == null)) {
       return;

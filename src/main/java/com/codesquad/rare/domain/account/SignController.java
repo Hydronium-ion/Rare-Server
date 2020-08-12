@@ -1,6 +1,6 @@
-package com.codesquad.rare.domain.account.oauth.github;
+package com.codesquad.rare.domain.account;
 
-import java.io.IOException;
+import com.codesquad.rare.domain.account.oauth.github.GitHubService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class GitHubController {
+public class SignController {
 
   private final GitHubService gitHubService;
 
   @GetMapping("/login/oauth")
   public void create(
-      @PathParam("code") @Valid String code, HttpServletResponse response) throws IOException, Exception {
+      @PathParam("code") @Valid String code, HttpServletResponse response) throws Exception {
     gitHubService.create(code, response);
   }
 }
