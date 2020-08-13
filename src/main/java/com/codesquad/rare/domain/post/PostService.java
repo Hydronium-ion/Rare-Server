@@ -23,18 +23,18 @@ public class PostService {
 
   private final AccountRepository accountRepository;
 
-  public List<Post> findAll(String condition, int page, int size) {
+  public List<Post> findAll(final String condition, final int page, final int size) {
     PageRequest pageRequest = PageRequest.of(page, size, Sort.by(condition).descending());
     return postRepository.findAllByIsPublicTrue(pageRequest).getContent();
   }
 
-  public Post findById(Long postId) {
+  public Post findById(final Long postId) {
     return postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
   }
 
   @Transactional
-  public PostCreateResponse save(PostCreateRequest postCreateRequest) {
+  public PostCreateResponse save(final PostCreateRequest postCreateRequest) {
     Account author = accountRepository.findById(postCreateRequest.getAuthorId())
         .orElseThrow(() -> new NotFoundException(Account.class, postCreateRequest.getAuthorId()));
     Post savedPost = postRepository.save(Post.of(postCreateRequest, author));
@@ -43,7 +43,7 @@ public class PostService {
   }
 
   @Transactional
-  public Post delete(Long postId) {
+  public Post delete(final Long postId) {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     postRepository.delete(post);
