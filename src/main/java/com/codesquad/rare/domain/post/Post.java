@@ -67,8 +67,11 @@ public class Post {
   private LocalDateTime createdAt;
 
   @Builder
-  private Post(Long id, String title, String subTitle, String content, String thumbnail,
-      Account author, int views, int likes, String tags, boolean isPublic, LocalDateTime createdAt) {
+  private Post(
+      final Long id, final String title, final String subTitle,
+      final String content, final String thumbnail,
+      final Account author, final int views, final int likes, final String tags,
+      final boolean isPublic, final LocalDateTime createdAt) {
     this.id = id;
     this.title = title;
     this.subTitle = subTitle;
