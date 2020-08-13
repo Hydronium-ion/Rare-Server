@@ -7,17 +7,11 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication(scanBasePackages = {"test"} , exclude = JpaRepositoriesAutoConfiguration.class)
-@EnableTransactionManagement
+@SpringBootApplication
 public class RareApplication extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
     SpringApplication.run(RareApplication.class, args);
-  }
-
-  @Override
-  protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-    return application.sources(RareApplication.class);
   }
 
 }

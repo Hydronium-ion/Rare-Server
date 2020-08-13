@@ -20,6 +20,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.codesquad.rare.config.JwtService;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.codesquad.rare.domain.post.response.PostCreateResponse;
@@ -58,6 +59,9 @@ class PostControllerTest {
 
   @Autowired
   MockMvc mockMvc;
+
+  @MockBean
+  JwtService jwtService;
 
   @MockBean
   PostController postController;
