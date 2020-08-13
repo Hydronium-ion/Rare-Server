@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 
 class PostCreateRequestTest {
 
-  private final Logger log = LoggerFactory.getLogger(PostCreateRequestTest.class);
+  final Logger log = LoggerFactory.getLogger(PostCreateRequestTest.class);
 
-  private Validator validator;
+  Validator validator;
 
   @BeforeEach
   void setValidator() {
