@@ -8,6 +8,7 @@ import com.codesquad.rare.common.api.ApiResult;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.codesquad.rare.domain.post.response.PostCreateResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
+import com.codesquad.rare.domain.post.response.PostResponse;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class PostController {
   }
 
   @GetMapping("{id}")
-  public ApiResult<Post> findById(@PathVariable(value = "id") Long postId) {
+  public ApiResult<PostResponse> findById(@PathVariable(value = "id") Long postId) {
     return OK(postService.findById(postId));
   }
 
