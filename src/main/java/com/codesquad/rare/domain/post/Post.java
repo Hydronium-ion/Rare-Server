@@ -2,6 +2,7 @@ package com.codesquad.rare.domain.post;
 
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.request.PostUpdateRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
@@ -65,6 +66,15 @@ public class Post {
   private Boolean isPublic;
 
   private LocalDateTime createdAt;
+
+  public void update(PostUpdateRequest postUpdateRequest) {
+    this.title = postUpdateRequest.getTitle();
+    this.subTitle = postUpdateRequest.getSubTitle();
+    this.content = postUpdateRequest.getContent();
+    this.thumbnail = postUpdateRequest.getThumbnail();
+    this.tags = postUpdateRequest.getTags();
+    this.isPublic = postUpdateRequest.getIsPublic();
+  }
 
   @Builder
   private Post(

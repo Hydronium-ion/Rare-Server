@@ -5,6 +5,7 @@ import static com.codesquad.rare.domain.post.Condition.CREATED;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.request.PostUpdateRequest;
 import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
 import com.codesquad.rare.domain.post.response.PostResponse;
@@ -56,6 +57,15 @@ public class PostService {
         .orElseThrow(() -> new NotFoundException(Account.class, postCreateRequest.getAuthorId()));
     Post savedPost = postRepository.save(Post.of(postCreateRequest, author));
     return new PostIdResponse(savedPost.getId());
+  }
+
+  @Transactional
+  public PostIdResponse update(final PostUpdateRequest postUpdateRequest, Long id) {
+    Post post = postRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(Post.class, id));
+    post.update(postUpdateRequest);
+    Post updatedPost = postRepository.save(post);
+    return new PostIdResponse(updatedPost.getId());
   }
 
   @Transactional

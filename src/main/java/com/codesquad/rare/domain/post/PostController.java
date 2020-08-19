@@ -6,6 +6,7 @@ import static com.codesquad.rare.domain.post.Condition.LIKE;
 
 import com.codesquad.rare.common.api.ApiResult;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.request.PostUpdateRequest;
 import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
 import com.codesquad.rare.domain.post.response.PostResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +57,13 @@ public class PostController {
   public ApiResult<PostIdResponse> create(
       @Valid @RequestBody PostCreateRequest postCreateRequest) {
     return OK(postService.save(postCreateRequest));
+  }
+
+  @PutMapping("{id}")
+  public ApiResult<PostIdResponse> update(
+      @PathVariable("id") Long id,
+      @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
+    return OK(postService.update(postUpdateRequest, id));
   }
 
   @DeleteMapping("{id}")
