@@ -5,7 +5,7 @@ import static com.codesquad.rare.domain.post.Condition.CREATED;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
-import com.codesquad.rare.domain.post.response.PostCreateResponse;
+import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
 import com.codesquad.rare.domain.post.response.PostResponse;
 import com.codesquad.rare.error.exeception.NotFoundException;
@@ -51,20 +51,19 @@ public class PostService {
   }
 
   @Transactional
-  public PostCreateResponse save(final PostCreateRequest postCreateRequest) {
+  public PostIdResponse save(final PostCreateRequest postCreateRequest) {
     Account author = accountRepository.findById(postCreateRequest.getAuthorId())
         .orElseThrow(() -> new NotFoundException(Account.class, postCreateRequest.getAuthorId()));
     Post savedPost = postRepository.save(Post.of(postCreateRequest, author));
-    PostCreateResponse response = new PostCreateResponse(savedPost.getId());
-    return response;
+    return new PostIdResponse(savedPost.getId());
   }
 
   @Transactional
-  public Post delete(final Long postId) {
+  public PostIdResponse delete(final Long postId) {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     postRepository.delete(post);
-    return post;
+    return new PostIdResponse(post.getId());
   }
 
   private PostMainResponse toPostMainResponse(final Post post) {

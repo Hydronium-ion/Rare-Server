@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostCreateResponse {
+public class PostIdResponse {
 
   private Long postId;
 
-  public PostCreateResponse(final Long postId) {
+  public PostIdResponse(final Long postId) {
     this.postId = postId;
   }
 }

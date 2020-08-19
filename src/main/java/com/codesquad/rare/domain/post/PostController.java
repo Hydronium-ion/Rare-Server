@@ -6,7 +6,7 @@ import static com.codesquad.rare.domain.post.Condition.LIKE;
 
 import com.codesquad.rare.common.api.ApiResult;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
-import com.codesquad.rare.domain.post.response.PostCreateResponse;
+import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
 import com.codesquad.rare.domain.post.response.PostResponse;
 import java.util.List;
@@ -52,14 +52,14 @@ public class PostController {
   }
 
   @PostMapping
-  public ApiResult<PostCreateResponse> create(
+  public ApiResult<PostIdResponse> create(
       @Valid @RequestBody PostCreateRequest postCreateRequest) {
     return OK(postService.save(postCreateRequest));
   }
 
   @DeleteMapping("{id}")
-  public ApiResult delete(@PathVariable("id") Long postId) {
-    postService.delete(postId);
-    return OK(true);
+  public ApiResult<PostIdResponse> delete(
+      @Valid @PathVariable("id") Long postId) {
+    return OK(postService.delete(postId));
   }
 }

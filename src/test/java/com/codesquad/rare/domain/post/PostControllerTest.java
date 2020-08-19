@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
-import com.codesquad.rare.domain.post.response.PostCreateResponse;
+import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -234,7 +234,7 @@ class PostControllerTest {
     //given
     PostCreateRequest postCreateRequest = getPostCreateRequest();
 
-    PostCreateResponse response = new PostCreateResponse(1L);
+    PostIdResponse response = new PostIdResponse(1L);
     given(postController.create(any(PostCreateRequest.class))).willReturn(OK(response));
 
     //when
