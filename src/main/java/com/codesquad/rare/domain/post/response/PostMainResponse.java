@@ -3,6 +3,7 @@ package com.codesquad.rare.domain.post.response;
 import com.codesquad.rare.domain.account.Account;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,18 @@ public class PostMainResponse {
   private Integer likes;
 
   private LocalDateTime createdAt;
+
+  @Builder
+  private PostMainResponse(
+      final Long id, final String title, final String content, final String thumbnail,
+      final Account author, final Integer views, final Integer likes, final LocalDateTime createdAt) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.thumbnail = thumbnail;
+    this.author = author;
+    this.views = views;
+    this.likes = likes;
+    this.createdAt = createdAt;
+  }
 }

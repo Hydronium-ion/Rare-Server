@@ -6,7 +6,9 @@ import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.codesquad.rare.domain.post.response.PostCreateResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
 import com.codesquad.rare.error.exeception.NotFoundException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +28,10 @@ public class PostService {
 
   public List<PostMainResponse> findAll(final String condition, final int page, final int size) {
     PageRequest pageRequest = PageRequest.of(page, size, Sort.by(condition).descending());
-    return postRepository.findAllByIsPublicTrue(pageRequest).getContent();
+    return postRepository.findAllByIsPublicTrue(pageRequest)
+        .stream()
+        .map(this::toPostMainResponse)
+        .collect(Collectors.toList());
   }
 
   public Post findById(final Long postId) {
@@ -49,5 +54,18 @@ public class PostService {
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     postRepository.delete(post);
     return post;
+  }
+
+  private PostMainResponse toPostMainResponse(final Post post) {
+    return PostMainResponse.builder()
+        .id(post.getId())
+        .title(post.getTitle())
+        .content(post.getContent())
+        .thumbnail(post.getThumbnail())
+        .author(post.getAuthor())
+        .views(post.getViews())
+        .likes(post.getLikes())
+        .createdAt(post.getCreatedAt())
+        .build();
   }
 }
