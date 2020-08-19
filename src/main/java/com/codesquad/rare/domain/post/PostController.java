@@ -39,7 +39,7 @@ public class PostController {
   }
 
   @GetMapping("/recent")
-  public ApiResult<List<Post>> findAllByCreatedAt(
+  public ApiResult<List<PostMainResponse>> findAllByCreatedAt(
       @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE) int page,
       @RequestParam(value = "size", required = false, defaultValue = DEFAULT_SIZE) int size) {
     return OK(postService.findAll(CREATED.getName(), page, size));
