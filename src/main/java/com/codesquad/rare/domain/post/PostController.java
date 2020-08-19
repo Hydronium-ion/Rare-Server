@@ -7,6 +7,7 @@ import static com.codesquad.rare.domain.post.Condition.LIKE;
 import com.codesquad.rare.common.api.ApiResult;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.codesquad.rare.domain.post.response.PostCreateResponse;
+import com.codesquad.rare.domain.post.response.PostMainResponse;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class PostController {
   private static final String DEFAULT_SIZE = "20";
 
   @GetMapping
-  public ApiResult<List<Post>> findAllByLikes(
+  public ApiResult<List<PostMainResponse>> findAllByLikes(
       @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE) int page,
       @RequestParam(value = "size", required = false, defaultValue = DEFAULT_SIZE) int size) {
     return OK(postService.findAll(LIKE.getName(), page, size));

@@ -4,6 +4,7 @@ import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
 import com.codesquad.rare.domain.post.response.PostCreateResponse;
+import com.codesquad.rare.domain.post.response.PostMainResponse;
 import com.codesquad.rare.error.exeception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class PostService {
 
   private final AccountRepository accountRepository;
 
-  public List<Post> findAll(final String condition, final int page, final int size) {
+  public List<PostMainResponse> findAll(final String condition, final int page, final int size) {
     PageRequest pageRequest = PageRequest.of(page, size, Sort.by(condition).descending());
     return postRepository.findAllByIsPublicTrue(pageRequest).getContent();
   }
