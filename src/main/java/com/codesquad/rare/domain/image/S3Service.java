@@ -12,11 +12,15 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
+import com.codesquad.rare.error.exeception.FilenameExtensionException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +54,8 @@ public class S3Service {
   public String upload(final MultipartFile file, final boolean isPostImage) throws IOException {
     String bucket = getBucketPath(isPostImage);
     String fileName = file.getOriginalFilename();
+    log.debug("##### fileName:{}", fileName);
+    verifyFilenameExtension(file);
 
     byte[] bytes = IOUtils.toByteArray(file.getInputStream());
     ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -67,5 +73,15 @@ public class S3Service {
       return POST.getValue();
     }
     return USER.getValue();
+  }
+
+  private void verifyFilenameExtension(MultipartFile file) {
+    List<String> imageExtensions =
+        Arrays.asList("bmp", "rle", "dib", "jpg", "jpeg", "png", "gif", "tif", "tiff", "raw");
+    String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+    if (imageExtensions.contains(fileExtension)) {
+      return;
+    }
+    throw new FilenameExtensionException();
   }
 }
