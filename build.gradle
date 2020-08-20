@@ -36,6 +36,8 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'com.h2database:h2'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-context', version: '2.2.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 ext {
