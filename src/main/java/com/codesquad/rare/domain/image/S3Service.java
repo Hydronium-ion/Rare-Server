@@ -54,6 +54,7 @@ public class S3Service {
     byte[] bytes = IOUtils.toByteArray(file.getInputStream());
     ObjectMetadata objectMetadata = new ObjectMetadata();
     objectMetadata.setContentLength(bytes.length);
+    objectMetadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
     s3Client.putObject(new PutObjectRequest(bucket, fileName, byteArrayInputStream, objectMetadata)
