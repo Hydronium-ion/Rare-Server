@@ -16,6 +16,8 @@ import com.codesquad.rare.error.exeception.FilenameExtensionException;
 import com.codesquad.rare.error.exeception.S3FileUploadException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -55,7 +57,8 @@ public class S3Service {
   public String upload(final MultipartFile file, final boolean isPostImage) {
     try {
       String bucket = getBucketPath(isPostImage);
-      String fileName = file.getOriginalFilename();
+      String fileName = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) +
+          "@" + file.getOriginalFilename();
       log.debug("##### fileName:{}", fileName);
       verifyFilenameExtension(file);
 
