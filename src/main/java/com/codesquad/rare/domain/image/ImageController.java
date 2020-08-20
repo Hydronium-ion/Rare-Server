@@ -1,16 +1,15 @@
 package com.codesquad.rare.domain.image;
 
 import com.codesquad.rare.common.api.ApiResult;
+import com.codesquad.rare.error.exeception.EmptyValueException;
+import com.codesquad.rare.error.exeception.NotFoundException;
 import java.io.IOException;
-import java.util.Enumeration;
-import javax.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @RestController
 @AllArgsConstructor
@@ -21,8 +20,12 @@ public class ImageController {
   private ImageService imageService;
 
   @PostMapping("/images")
-  public ApiResult uploadPostImage(HttpServletRequest request, MultipartHttpServletRequest request2,
+  public ApiResult uploadPostImage(
       ImageDto imageDto, @RequestParam("imageFile") MultipartFile file) throws IOException {
+
+    if (file.isEmpty()) {
+      throw new EmptyValueException("Image file not found. Unable to upload.");
+    }
 
     String imgPath = s3Service.upload(file, imageDto.isPostImage());
     imageDto.setFilePath(imgPath);
