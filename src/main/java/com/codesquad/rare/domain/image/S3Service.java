@@ -13,6 +13,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
 import com.codesquad.rare.error.exeception.FilenameExtensionException;
+import com.codesquad.rare.error.exeception.S3FileUploadException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -51,21 +52,25 @@ public class S3Service {
         .build();
   }
 
-  public String upload(final MultipartFile file, final boolean isPostImage) throws IOException {
-    String bucket = getBucketPath(isPostImage);
-    String fileName = file.getOriginalFilename();
-    log.debug("##### fileName:{}", fileName);
-    verifyFilenameExtension(file);
+  public String upload(final MultipartFile file, final boolean isPostImage) {
+    try {
+      String bucket = getBucketPath(isPostImage);
+      String fileName = file.getOriginalFilename();
+      log.debug("##### fileName:{}", fileName);
+      verifyFilenameExtension(file);
 
-    byte[] bytes = IOUtils.toByteArray(file.getInputStream());
-    ObjectMetadata objectMetadata = new ObjectMetadata();
-    objectMetadata.setContentLength(bytes.length);
-    objectMetadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
-    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+      byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+      ObjectMetadata objectMetadata = new ObjectMetadata();
+      objectMetadata.setContentLength(bytes.length);
+      objectMetadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
-    s3Client.putObject(new PutObjectRequest(bucket, fileName, byteArrayInputStream, objectMetadata)
-        .withCannedAcl(CannedAccessControlList.PublicRead));
-    return s3Client.getUrl(bucket, fileName).toString();
+      s3Client.putObject(new PutObjectRequest(bucket, fileName, byteArrayInputStream, objectMetadata)
+          .withCannedAcl(CannedAccessControlList.PublicRead));
+      return s3Client.getUrl(bucket, fileName).toString();
+    } catch (IOException e) {
+      throw new S3FileUploadException("Error: File upload failed");
+    }
   }
 
   private String getBucketPath(boolean isPostImage) {

@@ -21,7 +21,7 @@ public class ImageController {
 
   @PostMapping("/images")
   public ApiResult<String> uploadPostImage(
-      ImageDto imageDto, @RequestParam("imageFile") MultipartFile file) throws IOException {
+      ImageDto imageDto, @RequestParam("imageFile") MultipartFile file) {
 
     if (file.isEmpty()) {
       throw new EmptyValueException("Image file not found. Unable to upload.");
