@@ -20,7 +20,7 @@ public class ImageController {
   private ImageService imageService;
 
   @PostMapping("/images")
-  public ApiResult uploadPostImage(
+  public ApiResult<String> uploadPostImage(
       ImageDto imageDto, @RequestParam("imageFile") MultipartFile file) throws IOException {
 
     if (file.isEmpty()) {
@@ -31,6 +31,6 @@ public class ImageController {
     imageDto.setFilePath(imgPath);
     imageService.save(imageDto);
 
-    return ApiResult.OK(true);
+    return ApiResult.OK(imageDto.getFilePath());
   }
 }
