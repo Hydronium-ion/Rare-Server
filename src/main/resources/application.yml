@@ -19,6 +19,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 # logging
 logging:
@@ -40,6 +44,9 @@ management:
     health:
       show-details: always
 
+server:
+  port: 8090
+
 ---
 # spring, datasource
 spring:
@@ -58,6 +65,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 logging:
   level:
@@ -75,3 +86,16 @@ management:
   endpoint:
     health:
       show-details: always
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${IAM_ACCESS_KEY}
+      secretKey: ${IAM_SECRET_KEY}
+    s3:
+      bucket-user: ${BUCKET_USER_PATH}
+      bucket-post: ${BUCKET_POST_PATH}
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false

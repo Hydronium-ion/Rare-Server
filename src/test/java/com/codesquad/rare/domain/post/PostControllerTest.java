@@ -23,7 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
-import com.codesquad.rare.domain.post.response.PostCreateResponse;
+import com.codesquad.rare.domain.post.response.PostIdResponse;
+import com.codesquad.rare.domain.post.response.PostMainResponse;
+import com.codesquad.rare.domain.post.response.PostResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -74,7 +76,7 @@ class PostControllerTest {
 
 
   @BeforeEach
-  void set_up(WebApplicationContext webApplicationContext,
+  void setUp(WebApplicationContext webApplicationContext,
       RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
@@ -82,7 +84,7 @@ class PostControllerTest {
         .build();
   }
 
-  public static String asJsonString(final Object obj) {
+  String asJsonString(final Object obj) {
     try {
       return new ObjectMapper().writeValueAsString(obj);
     } catch (Exception e) {
@@ -90,10 +92,10 @@ class PostControllerTest {
     }
   }
 
-  private PostCreateRequest getPostCreateRequest() {
+  PostCreateRequest getPostCreateRequest() {
     return PostCreateRequest.builder()
-        .title("타이틀입니다일 (필수)")
-        .subTitle("보조 타이틀 입니다(필수)")
+        .title("타이틀 입니다")
+        .subTitle("보조 타이틀 입니다")
         .content("내용")
         .authorId(1L)
         .tags("1번")
@@ -102,18 +104,50 @@ class PostControllerTest {
         .build();
   }
 
-  private Post getPost(Random random, Account won, long id, String title) {
+  PostMainResponse getPostMainResponse() {
+    return PostMainResponse.builder()
+        .id(1L)
+        .title("타이틀입니다")
+        .content("content입니다")
+        .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
+        .author(won)
+        .views(this.random.nextInt(999))
+        .likes(this.random.nextInt(99))
+        .createdAt(LocalDateTime.now())
+        .build();
+  }
+
+  PostIdResponse getPostIdResponse(Long id) {
+    return new PostIdResponse(id);
+  }
+
+  PostResponse getPostResponse() {
+    return PostResponse.builder()
+        .id(1L)
+        .title("타이틀입니다")
+        .subTitle("서브타이틀입니다")
+        .content("내용입니다")
+        .thumbnail("썸네일입니다")
+        .author(won)
+        .views(this.random.nextInt(999))
+        .likes(this.random.nextInt(99))
+        .tags("태그입니다")
+        .createdAt(LocalDateTime.now())
+        .build();
+  }
+
+  Post getPost(Account won, long id, String title) {
     return Post.builder()
         .id(id)
         .title(id + title)
         .subTitle("보조 제목")
         .content("이런 저런 내용이 담겨있어요")
-        .author(won)
-        .likes(random.nextInt(99))
-        .tags("태")
-        .views(random.nextInt(999))
-        .createdAt(LocalDateTime.now())
         .thumbnail("https://i.ytimg.com/vi/FN506P8rX4s/maxresdefault.jpg")
+        .author(won)
+        .views(this.random.nextInt(999))
+        .likes(this.random.nextInt(99))
+        .tags("태그")
+        .createdAt(LocalDateTime.now())
         .isPublic(true)
         .build();
   }
@@ -124,17 +158,18 @@ class PostControllerTest {
   void find_all_in_latest_order() throws Exception {
 
     //given
-    Post post1 = getPost(random, won, 1L, "1번째 포스팅 입니다");
-    Post post2 = getPost(random, won, 2L, "2번째 포스팅 입니다");
+    Random random = new Random();
+    PostMainResponse post1 = getPostMainResponse();
+    PostMainResponse post2 = getPostMainResponse();
 
     int page = 0;
     int size = 20;
 
-    List<Post> posts = Arrays.asList(post1, post2);
-    given(postController.findAllInLatestOrder(page, size)).willReturn(OK(posts));
+    List<PostMainResponse> posts = Arrays.asList(post1, post2);
+    given(postController.findAllByCreatedAt(page, size)).willReturn(OK(posts));
 
     //when
-    ResultActions result = mockMvc.perform(get("/posts/createdAt")
+    ResultActions result = mockMvc.perform(get("/posts/recent")
         .contentType(MediaType.APPLICATION_JSON)
         .param("page", String.valueOf(page))
         .param("size", String.valueOf(size)));
@@ -154,35 +189,40 @@ class PostControllerTest {
                 fieldWithPath("success").description("성공 여부").type(JsonFieldType.BOOLEAN),
                 fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL),
                 subsectionWithPath("response").description("응답"),
-                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)")
+                    .type(JsonFieldType.NUMBER),
                 fieldWithPath("response.[].title").description("포스트 제목").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].subTitle").description("포스트 보조 제목").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].content").description("포스트 내용").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].thumbnail").description("포스트 썸네일").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].author").description("포스트 저자").type(JsonFieldType.OBJECT),
+                fieldWithPath("response.[].content").description("포스트 내용")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.[].thumbnail").description("포스트 썸네일")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.[].author").description("포스트 저자")
+                    .type(JsonFieldType.OBJECT),
                 fieldWithPath("response.[].views").description("포스트 조회").type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].tags").description("포스트 태그").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
+                fieldWithPath("response.[].likes").description("포스트 좋아요 수")
+                    .type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].createdAt").description("포스트 생성 시간")
+                    .type(JsonFieldType.STRING)
             )));
   }
 
   @DisplayName("메인 페이지 조회 (좋아요 순으로 내림차순 정렬)")
   @Test
-  public void find_all_by_likes_in_descending_order() throws Exception {
+  void find_all_by_likes_in_descending_order() throws Exception {
     //given
-    Post post1 = getPost(random, won, 1L, "1번째 포스팅 입니다");
-    Post post2 = getPost(random, won, 2L, "2번째 포스팅 입니다");
-    Post post3 = getPost(random, won, 3L, "3번째 포스팅 입니다");
+    Random random = new Random();
+    PostMainResponse post1 = getPostMainResponse();
+    PostMainResponse post2 = getPostMainResponse();
+    PostMainResponse post3 = getPostMainResponse();
 
     int page = 0;
     int size = 20;
 
-    List<Post> posts = Arrays.asList(post3, post2, post1);
-    given(postController.findAllByLikesInDescendingOrder(page, size)).willReturn(OK(posts));
+    List<PostMainResponse> posts = Arrays.asList(post3, post2, post1);
+    given(postController.findAllByLikes(page, size)).willReturn(OK(posts));
 
     //when
-    ResultActions result = mockMvc.perform(get("/posts/likes")
+    ResultActions result = mockMvc.perform(get("/posts")
         .contentType(MediaType.APPLICATION_JSON)
         .param("page", String.valueOf(page))
         .param("size", String.valueOf(size)));
@@ -201,16 +241,20 @@ class PostControllerTest {
                 fieldWithPath("success").description("성공 여부").type(JsonFieldType.BOOLEAN),
                 fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL),
                 subsectionWithPath("response").description("응답"),
-                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)").type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].id").description("포스트 ID 번호(고유한 값)")
+                    .type(JsonFieldType.NUMBER),
                 fieldWithPath("response.[].title").description("포스트 제목").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].subTitle").description("포스트 보조 제목").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].content").description("포스트 내용").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].thumbnail").description("포스트 썸네일").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].author").description("포스트 저자").type(JsonFieldType.OBJECT),
+                fieldWithPath("response.[].content").description("포스트 내용")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.[].thumbnail").description("포스트 썸네일")
+                    .type(JsonFieldType.STRING),
+                fieldWithPath("response.[].author").description("포스트 저자")
+                    .type(JsonFieldType.OBJECT),
                 fieldWithPath("response.[].views").description("포스트 조회").type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].likes").description("포스트 좋아요 수").type(JsonFieldType.NUMBER),
-                fieldWithPath("response.[].tags").description("포스트 태그").type(JsonFieldType.STRING),
-                fieldWithPath("response.[].createdAt").description("포스트 생성 시간").type(JsonFieldType.STRING)
+                fieldWithPath("response.[].likes").description("포스트 좋아요 수")
+                    .type(JsonFieldType.NUMBER),
+                fieldWithPath("response.[].createdAt").description("포스트 생성 시간")
+                    .type(JsonFieldType.STRING)
             )));
   }
 
@@ -220,10 +264,8 @@ class PostControllerTest {
     //given
     PostCreateRequest postCreateRequest = getPostCreateRequest();
 
-    PostCreateResponse response = new PostCreateResponse();
-    response.setPostId(1L);
+    PostIdResponse response = new PostIdResponse(1L);
     given(postController.create(any(PostCreateRequest.class))).willReturn(OK(response));
-
 
     //when
     ResultActions result = mockMvc.perform(post("/posts")
@@ -241,7 +283,8 @@ class PostControllerTest {
                 getDocumentResponse(),
                 requestFields(
                     fieldWithPath("title").description("포스트 제목 (필수)").type(JsonFieldType.STRING),
-                    fieldWithPath("subTitle").description("포스트 보조 제목 (필수)").type(JsonFieldType.STRING),
+                    fieldWithPath("subTitle").description("포스트 보조 제목 (필수)")
+                        .type(JsonFieldType.STRING),
                     fieldWithPath("content").description("포스트 내용").type(JsonFieldType.STRING),
                     fieldWithPath("thumbnail").description("포스트 썸네일 이미지")
                         .type(JsonFieldType.STRING),
@@ -266,7 +309,8 @@ class PostControllerTest {
   void delete_post() throws Exception {
 
     //given
-    given(postController.delete(1L)).willReturn(OK(true));
+    PostIdResponse post = getPostIdResponse(1L);
+    given(postController.delete(1L)).willReturn(OK(post));
 
     //when
     ResultActions result = mockMvc.perform(delete("/posts/{id}", 1)
@@ -284,7 +328,8 @@ class PostControllerTest {
             ),
             responseFields(
                 fieldWithPath("success").description("성공 유무").type(JsonFieldType.BOOLEAN),
-                fieldWithPath("response").description("응답").type(JsonFieldType.BOOLEAN),
+                fieldWithPath("response").description("응답").type(JsonFieldType.OBJECT),
+                fieldWithPath("response.postId").description("삭제된 포스트 ID").type(JsonFieldType.NUMBER),
                 fieldWithPath("error").description("에러 메세지").type(JsonFieldType.NULL)
             )
         ));
@@ -295,7 +340,7 @@ class PostControllerTest {
   void find_post_by_id() throws Exception {
 
     //given
-    Post post = getPost(random, won, 1L, "1번째 포스팅 입니다");
+    PostResponse post = getPostResponse();
 
     given(postController.findById(1L)).willReturn(OK(post));
 
@@ -320,7 +365,8 @@ class PostControllerTest {
                 fieldWithPath("response.id").description("포스트 ID 번호(고유한 값)")
                     .type(JsonFieldType.NUMBER),
                 fieldWithPath("response.title").description("포스트 제목").type(JsonFieldType.STRING),
-                fieldWithPath("response.subTitle").description("포스트 보조 제목").type(JsonFieldType.STRING),
+                fieldWithPath("response.subTitle").description("포스트 보조 제목")
+                    .type(JsonFieldType.STRING),
                 fieldWithPath("response.content").description("포스트 내용").type(JsonFieldType.STRING),
                 fieldWithPath("response.thumbnail").description("포스트 썸네일")
                     .type(JsonFieldType.STRING),

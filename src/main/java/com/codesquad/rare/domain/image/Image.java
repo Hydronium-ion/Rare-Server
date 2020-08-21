@@ -1,4 +1,4 @@
-package com.codesquad.rare.domain.account;
+package com.codesquad.rare.domain.image;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,24 +10,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-public class Account {
+public class Image {
 
   @Id
-  @Column(name = "account_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String name;
+  @Column(columnDefinition = "TEXT")
+  private String filePath;
 
-  private String avatarUrl;
+  private boolean isPostImage;
 
   @Builder
-  private Account(Long id, String name, String avatarUrl) {
+  public Image(Long id, String filePath, boolean isPostImage) {
     this.id = id;
-    this.name = name;
-    this.avatarUrl = avatarUrl;
+    this.filePath = filePath;
+    this.isPostImage = isPostImage;
   }
 }
