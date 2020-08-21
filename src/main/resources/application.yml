@@ -43,6 +43,7 @@ management:
   endpoint:
     health:
       show-details: always
+
 ---
 # spring, datasource
 spring:
@@ -98,9 +99,6 @@ cloud:
       static: ${AWS_REGION}
     stack:
       auto: false
-
-server:
-  port: 8090
 
 ---
 # spring, datasource
