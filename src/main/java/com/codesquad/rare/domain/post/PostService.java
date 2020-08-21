@@ -60,9 +60,9 @@ public class PostService {
   }
 
   @Transactional
-  public PostIdResponse update(final PostUpdateRequest postUpdateRequest, Long id) {
-    Post post = postRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException(Post.class, id));
+  public PostIdResponse update(final PostUpdateRequest postUpdateRequest, Long postId) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new NotFoundException(Post.class, postId));
     post.update(postUpdateRequest);
     Post updatedPost = postRepository.save(post);
     return new PostIdResponse(updatedPost.getId());

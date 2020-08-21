@@ -61,9 +61,9 @@ public class PostController {
 
   @PutMapping("{id}")
   public ApiResult<PostIdResponse> update(
-      @PathVariable("id") Long id,
+      @PathVariable("id") Long postId,
       @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
-    return OK(postService.update(postUpdateRequest, id));
+    return OK(postService.update(postUpdateRequest, postId));
   }
 
   @DeleteMapping("{id}")
