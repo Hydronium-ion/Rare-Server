@@ -86,19 +86,6 @@ management:
   endpoint:
     health:
       show-details: always
-    
-cloud:
-  aws:
-    credentials:
-      accessKey: ${IAM_ACCESS_KEY}
-      secretKey: ${IAM_SECRET_KEY}
-    s3:
-      bucket-user: ${BUCKET_USER_PATH}
-      bucket-post: ${BUCKET_POST_PATH}
-    region:
-      static: ${AWS_REGION}
-    stack:
-      auto: false
 
 ---
 # spring, datasource
