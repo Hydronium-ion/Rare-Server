@@ -43,6 +43,61 @@ management:
   endpoint:
     health:
       show-details: always
+---
+# spring, datasource
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_URL}/rare
+    username: ${DB_USER}
+    password: ${DB_PW}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# logging
+logging:
+  level:
+    web: debug
+    com.codesquad.rare: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: env,beans
+        include: "*"
+      base-path: ${ACTUATOR}
+  endpoint:
+    health:
+      show-details: always
+    
+cloud:
+  aws:
+    credentials:
+      accessKey: ${IAM_ACCESS_KEY}
+      secretKey: ${IAM_SECRET_KEY}
+    s3:
+      bucket-user: ${BUCKET_USER_PATH}
+      bucket-post: ${BUCKET_POST_PATH}
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
 
 server:
   port: 8090
