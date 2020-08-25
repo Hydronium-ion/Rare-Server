@@ -20,7 +20,7 @@ class PostServiceTest {
   final Logger log = LoggerFactory.getLogger(PostServiceTest.class);
 
   @MockBean
-  private PostRepository postRepository;
+  PostRepository postRepository;
 
   /**
    * 같은 포스트라도 반복적으로 ID 값만 다르다면 모두 생성할 수 있어야 합니다. 같은 포스트를 10번 반복 생성해보는 테스트입니다.
