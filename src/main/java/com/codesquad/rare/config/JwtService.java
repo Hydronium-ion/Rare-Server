@@ -7,6 +7,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.IOException;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class JwtService {
   private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
   private final Key KEY = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-  public String makeJwt(Account account) throws Exception {
+  public String makeJwt(Account account) {
     Date expireTime = new Date();
     expireTime.setTime(expireTime.getTime() + EXPIRE_TIME);
 

@@ -3,6 +3,7 @@ package com.codesquad.rare.domain.account.oauth.github;
 import com.codesquad.rare.config.JwtService;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,10 @@ public class GitHubService {
 
   private final AccountRepository accountRepository;
   private final JwtService jwtService;
+  private final String GITHUB_AUTHORIZATION_URL = "https://github.com/login/oauth/authorize";
+  private final String GITHUB_SCOPE = "read:user%20user:email";
+  private final String GITHUB_GET_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
+  private final String GITHUB_GET_USER_DATA_URL = "https://api.github.com/user?access_token=";
 
   @Value("${github.client_id}")
   private String clientId;
@@ -40,13 +45,22 @@ public class GitHubService {
     this.jwtService = jwtService;
   }
 
-  public String create(String code, HttpServletResponse response) throws Exception {
+  public void sendRedirect(HttpServletResponse response) throws IOException {
+    response.sendRedirect(GITHUB_AUTHORIZATION_URL
+        + "?client_id=" + clientId + "&scope" + GITHUB_SCOPE);
+  }
+
+  public String create(String code) {
 
     GitHubAccessToken gitHubAccessToken = getAccessToken(code);
     log.info("##### Access Token {}, {}", gitHubAccessToken.getTokenType(),
         gitHubAccessToken.getAccessToken());
 
     ResponseEntity<Map> resultMap = this.getResultMap(gitHubAccessToken.getAccessToken());
+    log.info("##### id:{}", resultMap.getBody().get("id").toString());
+    log.info("##### email:{}", resultMap.getBody().get("email"));
+    log.info("##### name:{}", resultMap.getBody().get("name"));
+    log.info("##### avatar:{}", resultMap.getBody().get("avatar_url"));
     Account account = Account.from(resultMap);
     this.createAccount(account);
 
@@ -55,7 +69,6 @@ public class GitHubService {
 
   public GitHubAccessToken getAccessToken(String code) {
     log.info("##### local:  {}, {}", clientId, clientSecret);
-    String URL = "https://github.com/login/oauth/access_token";
 
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     Map<String, String> header = new HashMap<>();
@@ -71,7 +84,7 @@ public class GitHubService {
 
     HttpEntity<?> request = new HttpEntity<>(bodies, headers);
     ResponseEntity<?> response = new RestTemplate()
-        .postForEntity(URL, request, GitHubAccessToken.class);
+        .postForEntity(GITHUB_GET_ACCESS_TOKEN_URL, request, GitHubAccessToken.class);
     return (GitHubAccessToken) response.getBody();
   }
 
@@ -81,7 +94,7 @@ public class GitHubService {
     HttpEntity<?> entity = new HttpEntity<>(header);
 
     UriComponents sendAccessTokenUrl = UriComponentsBuilder
-        .fromHttpUrl("https://api.github.com/user?access_token=" + accessToken).build();
+        .fromHttpUrl(GITHUB_GET_USER_DATA_URL + accessToken).build();
 
     try {
       return restTemplate
