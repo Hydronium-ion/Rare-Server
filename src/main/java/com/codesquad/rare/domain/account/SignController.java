@@ -1,7 +1,6 @@
 package com.codesquad.rare.domain.account;
 
-import com.codesquad.rare.domain.account.oauth.github.GitHubService;
-import java.io.IOException;
+import com.codesquad.rare.domain.account.oauth.github.GitHubOAuthService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -21,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class SignController {
 
-  private final GitHubService gitHubService;
+  private final GitHubOAuthService gitHubOAuthService;
+  private final AccountService accountService;
 
   @Value("${redirection.url}")
   private String redirectionUrl;
@@ -29,7 +29,7 @@ public class SignController {
   @GetMapping("github")
   public void githubLogin(HttpServletResponse response) throws Exception {
     log.info("##### callback before");
-    gitHubService.sendRedirect(response);
+    gitHubOAuthService.sendRedirect(response);
   }
 
   @GetMapping("callback")
@@ -37,12 +37,12 @@ public class SignController {
       @PathParam("code") @Valid String code, HttpServletResponse response) {
     log.info("##### callback after");
     log.info("##### code: {}", code);
-    String jwt = gitHubService.create(code);
+    String jwt = accountService.create(code);
 
     Cookie cookie = new Cookie("_rare_service_production", jwt);
     cookie.setMaxAge(60 * 60);
     cookie.setPath("/");
-    cookie.setHttpOnly(true);
+//    cookie.setHttpOnly(true);      추후 보안 관련 기능 구현 시 설정을 사용하자
 //    cookie.setSecure(true);        도메인이 HTTPS일 때 다음 설정을 사용하자
 //    cookie.setDomain(".rare.io");  도메인을 구매하고 다음 설정을 사용하자
     response.addCookie(cookie);

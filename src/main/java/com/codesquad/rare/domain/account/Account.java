@@ -42,4 +42,12 @@ public class Account {
         .avatarUrl(AccountCreateMap.getBody().get("avatar_url").toString())
         .build();
   }
+
+  public static Account of(ResponseEntity<Map> AccountCreateMap, String email) {
+    return Account.builder()
+        .email(email)
+        .name(AccountCreateMap.getBody().get("name").toString())
+        .avatarUrl(AccountCreateMap.getBody().get("avatar_url").toString())
+        .build();
+  }
 }

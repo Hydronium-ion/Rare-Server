@@ -1,8 +1,10 @@
 package com.codesquad.rare.domain.account.oauth.github;
 
-import com.codesquad.rare.config.JwtService;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,52 +26,34 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
+@Transactional(readOnly = true)
 @Slf4j
-public class GitHubService {
+public class GitHubOAuthService {
 
   private final AccountRepository accountRepository;
-  private final JwtService jwtService;
   private final String GITHUB_AUTHORIZATION_URL = "https://github.com/login/oauth/authorize";
-  private final String GITHUB_SCOPE = "read:user%20user:email";
+  private final String GITHUB_SCOPE = "user:email";
   private final String GITHUB_GET_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
-  private final String GITHUB_GET_USER_DATA_URL = "https://api.github.com/user?access_token=";
+  private final String GITHUB_GET_USER_DATA_URL = "https://api.github.com/user";
 
   @Value("${github.client_id}")
   private String clientId;
   @Value("${github.client_secret}")
   private String clientSecret;
 
-  public GitHubService(AccountRepository accountRepository,
-      JwtService jwtService) {
+  private RestTemplate restTemplate = new RestTemplate();
+  private ObjectMapper objectMapper = new ObjectMapper();
+
+  public GitHubOAuthService(AccountRepository accountRepository) {
     this.accountRepository = accountRepository;
-    this.jwtService = jwtService;
   }
 
   public void sendRedirect(HttpServletResponse response) throws IOException {
     response.sendRedirect(GITHUB_AUTHORIZATION_URL
-        + "?client_id=" + clientId + "&scope" + GITHUB_SCOPE);
-  }
-
-  public String create(String code) {
-
-    GitHubAccessToken gitHubAccessToken = getAccessToken(code);
-    log.info("##### Access Token {}, {}", gitHubAccessToken.getTokenType(),
-        gitHubAccessToken.getAccessToken());
-
-    ResponseEntity<Map> resultMap = this.getResultMap(gitHubAccessToken.getAccessToken());
-    log.info("##### id:{}", resultMap.getBody().get("id").toString());
-    log.info("##### email:{}", resultMap.getBody().get("email"));
-    log.info("##### name:{}", resultMap.getBody().get("name"));
-    log.info("##### avatar:{}", resultMap.getBody().get("avatar_url"));
-    Account account = Account.from(resultMap);
-    this.createAccount(account);
-
-    return jwtService.makeJwt(account);
+        + "?client_id=" + clientId + "&scope=" + GITHUB_SCOPE);
   }
 
   public GitHubAccessToken getAccessToken(String code) {
-    log.info("##### local:  {}, {}", clientId, clientSecret);
-
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     Map<String, String> header = new HashMap<>();
     header.put("Accept", "application/json");
@@ -82,19 +66,16 @@ public class GitHubService {
     body.put("code", code);
     bodies.setAll(body);
 
-    HttpEntity<?> request = new HttpEntity<>(bodies, headers);
+    HttpEntity<?> entity = new HttpEntity<>(bodies, headers);
     ResponseEntity<?> response = new RestTemplate()
-        .postForEntity(GITHUB_GET_ACCESS_TOKEN_URL, request, GitHubAccessToken.class);
+        .postForEntity(GITHUB_GET_ACCESS_TOKEN_URL, entity, GitHubAccessToken.class);
     return (GitHubAccessToken) response.getBody();
   }
 
-  public ResponseEntity<Map> getResultMap(String accessToken) {
-    RestTemplate restTemplate = new RestTemplate();
-    HttpHeaders header = new HttpHeaders();
-    HttpEntity<?> entity = new HttpEntity<>(header);
-
+  public ResponseEntity<Map> getAccountMap(HttpHeaders httpHeaders, String accessToken) {
+    HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
     UriComponents sendAccessTokenUrl = UriComponentsBuilder
-        .fromHttpUrl(GITHUB_GET_USER_DATA_URL + accessToken).build();
+        .fromHttpUrl(GITHUB_GET_USER_DATA_URL + "?access_token=" + accessToken).build();
 
     try {
       return restTemplate
@@ -111,6 +92,33 @@ public class GitHubService {
   public void createAccount(Account account) {
     if ((accountRepository.findAccountByEmail(account.getEmail()) == null)) {
       accountRepository.save(account);
+    }
+  }
+
+  private String getEmailFromGitHub(HttpHeaders httpHeaders) {
+    String email = restTemplate
+        .exchange(GITHUB_GET_USER_DATA_URL + "/emails", HttpMethod.GET,
+            new HttpEntity<>(httpHeaders), String.class).getBody();
+
+    try {
+      JsonNode emailNode = objectMapper.readTree(email);
+      for (JsonNode jsonNode : emailNode) {
+        if (jsonNode.get("primary").asBoolean()) {
+          return jsonNode.get("email").textValue();
+        }
+      }
+    } catch (JsonProcessingException e) {
+      log.error("##### Wrong Json format.", e);
+    }
+    return null;
+  }
+
+  public Account verifyAccountData(HttpHeaders httpHeaders, ResponseEntity<Map> accountMap) {
+    if (accountMap.getBody().get("email") == null) {
+      String email = getEmailFromGitHub(httpHeaders);
+      return Account.of(accountMap, email);
+    } else {
+      return Account.from(accountMap);
     }
   }
 }
