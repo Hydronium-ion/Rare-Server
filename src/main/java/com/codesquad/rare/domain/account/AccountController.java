@@ -3,6 +3,7 @@ package com.codesquad.rare.domain.account;
 import static com.codesquad.rare.common.api.ApiResult.OK;
 
 import com.codesquad.rare.common.api.ApiResult;
+import com.codesquad.rare.domain.account.response.AccountResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ public class AccountController {
   }
 
   @GetMapping("{id}")
-  public ApiResult<Account> findById(@PathVariable(value = "id") Long accountId) {
+  public ApiResult<AccountResponse> findById(@PathVariable(value = "id") Long accountId) {
     return OK(accountService.findById(accountId));
   }
 }
