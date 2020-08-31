@@ -36,7 +36,8 @@ public class PostService {
         .collect(Collectors.toList());
   }
 
-  public List<PostResponse> findAllByUsername(final String username, final int page, final int size) {
+  public List<PostResponse> findAllByUsername(final String username, final int page,
+      final int size) {
     PageRequest pageRequest = PageRequest.of(page, size, Sort.by(CREATED.getName()).descending());
     Account account = accountRepository.findByName(username);
     return postRepository.findByAuthor(account, pageRequest)
@@ -73,6 +74,15 @@ public class PostService {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     postRepository.delete(post);
+    return new PostIdResponse(post.getId());
+  }
+
+  @Transactional
+  public PostIdResponse addCountOfLike(final Long postId) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new NotFoundException(Post.class, postId));
+    post.addLikes();
+    postRepository.save(post);
     return new PostIdResponse(post.getId());
   }
 

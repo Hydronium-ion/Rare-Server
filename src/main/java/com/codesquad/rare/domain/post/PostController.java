@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,5 +71,10 @@ public class PostController {
   public ApiResult<PostIdResponse> delete(
       @Valid @PathVariable("id") Long postId) {
     return OK(postService.delete(postId));
+  }
+
+  @PatchMapping("{id}/likes")
+  public ApiResult<PostIdResponse> addCountOfLike(@PathVariable("id") Long postId) {
+    return OK(postService.addCountOfLike(postId));
   }
 }
