@@ -3,6 +3,7 @@ package com.codesquad.rare.domain.account;
 import com.codesquad.rare.config.JwtService;
 import com.codesquad.rare.domain.account.oauth.github.GitHubAccessToken;
 import com.codesquad.rare.domain.account.oauth.github.GitHubOAuthService;
+import com.codesquad.rare.error.exeception.NotFoundException;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -15,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AccountService {
 
+  private final AccountRepository accountRepository;
   private final GitHubOAuthService gitHubOAuthService;
   private final JwtService jwtService;
 
-  public AccountService(GitHubOAuthService gitHubOAuthService,
+  public AccountService(AccountRepository accountRepository, GitHubOAuthService gitHubOAuthService,
       JwtService jwtService) {
+    this.accountRepository = accountRepository;
     this.gitHubOAuthService = gitHubOAuthService;
     this.jwtService = jwtService;
   }
@@ -36,5 +39,10 @@ public class AccountService {
     Account account = gitHubOAuthService.verifyAccountData(httpHeaders, accountMap);
     gitHubOAuthService.createAccount(account);
     return jwtService.makeJwt(account);
+  }
+
+  public Account findById(Long accountId) {
+    return accountRepository.findById(accountId)
+        .orElseThrow(() -> new NotFoundException(Account.class, accountId));
   }
 }
