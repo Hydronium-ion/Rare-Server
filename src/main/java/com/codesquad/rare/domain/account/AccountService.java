@@ -3,6 +3,8 @@ package com.codesquad.rare.domain.account;
 import com.codesquad.rare.config.JwtService;
 import com.codesquad.rare.domain.account.oauth.github.GitHubAccessToken;
 import com.codesquad.rare.domain.account.oauth.github.GitHubOAuthService;
+import com.codesquad.rare.domain.account.request.AccountUpdateRequest;
+import com.codesquad.rare.domain.account.response.AccountIdResponse;
 import com.codesquad.rare.error.exeception.NotFoundException;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -44,5 +46,14 @@ public class AccountService {
   public Account findById(Long accountId) {
     return accountRepository.findById(accountId)
         .orElseThrow(() -> new NotFoundException(Account.class, accountId));
+  }
+
+  @Transactional
+  public AccountIdResponse update(Long accountId, AccountUpdateRequest accountUpdateRequest) {
+    Account account = accountRepository.findById(accountId)
+        .orElseThrow(() -> new NotFoundException(Account.class, accountId));
+    account.update(accountUpdateRequest);
+    Account savedAccount = accountRepository.save(account);
+    return new AccountIdResponse(savedAccount.getId());
   }
 }

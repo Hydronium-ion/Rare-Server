@@ -1,5 +1,6 @@
 package com.codesquad.rare.domain.account;
 
+import com.codesquad.rare.domain.account.request.AccountUpdateRequest;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,5 +50,11 @@ public class Account {
         .name(AccountCreateMap.getBody().get("name").toString())
         .avatarUrl(AccountCreateMap.getBody().get("avatar_url").toString())
         .build();
+  }
+
+  public void update(AccountUpdateRequest accountUpdateRequest) {
+    this.name = accountUpdateRequest.getName();
+    this.email = accountUpdateRequest.getEmail();
+    this.avatarUrl = accountUpdateRequest.getAvatarUrl();
   }
 }
