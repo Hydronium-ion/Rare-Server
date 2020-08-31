@@ -5,6 +5,7 @@ import static com.codesquad.rare.domain.post.Condition.CREATED;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.request.PostLikedRequest;
 import com.codesquad.rare.domain.post.request.PostUpdateRequest;
 import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
@@ -61,7 +62,7 @@ public class PostService {
   }
 
   @Transactional
-  public PostIdResponse update(final PostUpdateRequest postUpdateRequest, Long postId) {
+  public PostIdResponse update(final PostUpdateRequest postUpdateRequest, final Long postId) {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     post.update(postUpdateRequest);
@@ -78,10 +79,14 @@ public class PostService {
   }
 
   @Transactional
-  public PostIdResponse addCountOfLike(final Long postId) {
+  public PostIdResponse changeLikes(final Long postId, final PostLikedRequest postLikedRequest) {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
-    post.addLikes();
+    if (postLikedRequest.isLiked()) {
+      post.removeLikes();
+    } else {
+      post.addLikes();
+    }
     postRepository.save(post);
     return new PostIdResponse(post.getId());
   }

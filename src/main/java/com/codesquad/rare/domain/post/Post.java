@@ -113,4 +113,8 @@ public class Post {
   public void addLikes() {
     this.likes++;
   }
+
+  public void removeLikes() {
+    this.likes--;
+  }
 }

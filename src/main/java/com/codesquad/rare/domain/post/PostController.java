@@ -6,6 +6,7 @@ import static com.codesquad.rare.domain.post.Condition.LIKE;
 
 import com.codesquad.rare.common.api.ApiResult;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.request.PostLikedRequest;
 import com.codesquad.rare.domain.post.request.PostUpdateRequest;
 import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
@@ -74,7 +75,8 @@ public class PostController {
   }
 
   @PatchMapping("{id}/likes")
-  public ApiResult<PostIdResponse> addCountOfLike(@PathVariable("id") Long postId) {
-    return OK(postService.addCountOfLike(postId));
+  public ApiResult<PostIdResponse> changeLikes(@PathVariable("id") Long postId, @RequestBody
+      PostLikedRequest postLikedRequest) {
+    return OK(postService.changeLikes(postId, postLikedRequest));
   }
 }
