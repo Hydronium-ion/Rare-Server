@@ -109,4 +109,12 @@ public class Post {
         .isPublic(postCreateRequest.getIsPublic())
         .build();
   }
+
+  public void addLikes() {
+    this.likes++;
+  }
+
+  public void removeLikes() {
+    this.likes--;
+  }
 }

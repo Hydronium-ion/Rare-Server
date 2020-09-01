@@ -5,6 +5,7 @@ import static com.codesquad.rare.domain.post.Condition.CREATED;
 import com.codesquad.rare.domain.account.Account;
 import com.codesquad.rare.domain.account.AccountRepository;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.request.PostLikedRequest;
 import com.codesquad.rare.domain.post.request.PostUpdateRequest;
 import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
@@ -36,7 +37,8 @@ public class PostService {
         .collect(Collectors.toList());
   }
 
-  public List<PostResponse> findAllByUsername(final String username, final int page, final int size) {
+  public List<PostResponse> findAllByUsername(final String username, final int page,
+      final int size) {
     PageRequest pageRequest = PageRequest.of(page, size, Sort.by(CREATED.getName()).descending());
     Account account = accountRepository.findByName(username);
     return postRepository.findByAuthor(account, pageRequest)
@@ -60,7 +62,7 @@ public class PostService {
   }
 
   @Transactional
-  public PostIdResponse update(final PostUpdateRequest postUpdateRequest, Long postId) {
+  public PostIdResponse update(final PostUpdateRequest postUpdateRequest, final Long postId) {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     post.update(postUpdateRequest);
@@ -73,6 +75,19 @@ public class PostService {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new NotFoundException(Post.class, postId));
     postRepository.delete(post);
+    return new PostIdResponse(post.getId());
+  }
+
+  @Transactional
+  public PostIdResponse changeLikes(final Long postId, final PostLikedRequest postLikedRequest) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new NotFoundException(Post.class, postId));
+    if (postLikedRequest.isLiked()) {
+      post.removeLikes();
+    } else {
+      post.addLikes();
+    }
+    postRepository.save(post);
     return new PostIdResponse(post.getId());
   }
 

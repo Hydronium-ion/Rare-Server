@@ -6,6 +6,7 @@ import static com.codesquad.rare.domain.post.Condition.LIKE;
 
 import com.codesquad.rare.common.api.ApiResult;
 import com.codesquad.rare.domain.post.request.PostCreateRequest;
+import com.codesquad.rare.domain.post.request.PostLikedRequest;
 import com.codesquad.rare.domain.post.request.PostUpdateRequest;
 import com.codesquad.rare.domain.post.response.PostIdResponse;
 import com.codesquad.rare.domain.post.response.PostMainResponse;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,5 +72,11 @@ public class PostController {
   public ApiResult<PostIdResponse> delete(
       @Valid @PathVariable("id") Long postId) {
     return OK(postService.delete(postId));
+  }
+
+  @PatchMapping("{id}/likes")
+  public ApiResult<PostIdResponse> changeLikes(@PathVariable("id") Long postId, @RequestBody
+      PostLikedRequest postLikedRequest) {
+    return OK(postService.changeLikes(postId, postLikedRequest));
   }
 }
