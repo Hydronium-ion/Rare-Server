@@ -1,11 +1,11 @@
 package com.codesquad.rare;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class RareApplication {
+public class RareApplication extends SpringBootServletInitializer {
 
   private static final String PROPERTIES =
       "spring.config.location="

@@ -44,6 +44,14 @@ management:
     health:
       show-details: always
 
+# OAuth 2.0
+github:
+  client_id: ${GITHUB_CLIENT_ID}
+  client_secret: ${GITHUB_CLIENT_SECRET}
+
+redirection:
+  url: http://localhost:8080/posts
+
 ---
 # spring, datasource
 spring:
@@ -87,6 +95,11 @@ management:
     health:
       show-details: always
 
+# OAuth 2.0
+github:
+  client_id: ${GITHUB_CLIENT_ID}
+  client_secret: ${GITHUB_CLIENT_SECRET}
+
 ---
 # spring, datasource
 spring:
@@ -101,7 +114,7 @@ spring:
     open-in-view: false
     show-sql: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -126,6 +139,11 @@ management:
   endpoint:
     health:
       show-details: always
+
+# OAuth 2.0
+github:
+  client_id: ${GITHUB_CLIENT_ID}
+  client_secret: ${GITHUB_CLIENT_SCERET}
 
 cloud:
   aws:

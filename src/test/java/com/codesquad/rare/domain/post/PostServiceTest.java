@@ -32,7 +32,6 @@ class PostServiceTest {
     Long postId = (long) repetitionInfo.getCurrentRepetition();
 
     Account won = Account.builder()
-        .id(1L)
         .name("won")
         .avatarUrl("https://img.hankyung.com/photo/201906/03.19979855.1.jpg")
         .build();
